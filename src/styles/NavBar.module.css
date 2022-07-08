@@ -3,4 +3,33 @@
     width: 100vw;
     border-bottom: 1px solid var(--border-grey);
     background: #fff;
+    display: flex;
+    justify-content: center;
+}
+.container{
+    display: flex;
+    max-width: 975px;
+    width: 100%;
+    padding: 0 20px;
+    align-items: center;
+}
+.brand{
+    display: flex;
+    flex: 1 0 127px;
+}
+.brand a{
+    display: flex;
+}
+.panel{
+    display: flex;
+    flex: 1 0 127px;
+    justify-content: flex-end;
+}
+.panel-btn{
+    display: flex;
+    color: var(--blck-clr);
+    cursor: pointer;
+}
+.panel-btn:not(:first-child){
+    margin-left: 22px;
 }
