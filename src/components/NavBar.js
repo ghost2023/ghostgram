@@ -1,8 +1,8 @@
-import s from '../styles/NavBar.Module.css'
+import s from '../styles/NavBar.module.css'
 
 export default function NavBar({ page }) {
   return (
-    <div>
+    <div className={s.navbar}>
       
     </div>
   )
