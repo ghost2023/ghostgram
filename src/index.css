@@ -1,5 +1,6 @@
 :root{
-    --lg-grey-100: rgb(250, 250, 250);
+    --grey-100: rgb(250, 250, 250);
+    --grey-200: rgb(239, 239, 239);
     --border-grey: rgb(219, 219, 219);
     --grey-clr: rgb(142, 142, 142);
     --blck-clr: rgb(38, 38, 38);
@@ -8,7 +9,7 @@
 
 *{box-sizing: border-box;}
 
-body{
+html, body, form, fieldset, table, tr, td, img{
     margin: 0px;
     padding: 0px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -16,7 +17,22 @@ body{
     background: var(--lg-grey-100);
 }
 
-.btn{
-    border: 0;
-    background: none;
+*:focus-visible{
+    outline: none
+}
+svg{
+    width: 24px;
+    height: 24px;
+}
+
+.overlay{
+    display: flex;
+    position: relative;
+    background: rgba(0, 0, 0, 0.65);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: center;
 }
