@@ -16,6 +16,9 @@ html, body, form, fieldset, table, tr, td, img{
     font-size: 14px;
     background: var(--lg-grey-100);
 }
+body{
+    min-height: 100vh;
+}
 
 *:focus-visible{
     outline: none
@@ -27,12 +30,15 @@ svg{
 
 .overlay{
     display: flex;
-    position: relative;
+    position: fixed;
     background: rgba(0, 0, 0, 0.65);
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    width: 100vw;
+    height: 100vh;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
