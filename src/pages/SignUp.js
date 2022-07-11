@@ -1,7 +1,10 @@
 import s from '../styles/SignUp.module.css'
 import img from '../assets/logo.png';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import { auth, DB } from '../fb-config';
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { set, ref } from 'firebase/database';
 
 export default function SignUp() {
 
@@ -9,9 +12,18 @@ export default function SignUp() {
     const [name, setName] = useState('')
     const [uName, setUName] = useState('')
     const [pw, setPW] = useState('')
+    const nav = useNavigate()
 
-    function submitForm(){
-
+    function submitForm(e){
+      e.preventDefault()
+      createUserWithEmailAndPassword(auth, email, pw).then(userCredential => {
+        console.log(userCredential.user)
+        set(ref(DB, 'profiles/' + userCredential.user.uid), {
+          name,
+          username: uName,
+        })
+        nav('/')
+      })
     }
 
   return (
@@ -25,8 +37,8 @@ export default function SignUp() {
             <span>OR</span>
             <div className={s.line}></div>
         </div>
-        <form action="" method='POST'>
-            <input type="text" placeholder='Mobile Number or Email' onInput={e => {setEmail(e.target.value)}} />
+        <form onSubmit={e => submitForm(e)} >
+            <input type="text" placeholder='Email' onInput={e => {setEmail(e.target.value)}} />
             <input type="text" placeholder='Full Name' onInput={e => {setName(e.target.value)}} />
             <input type="text" placeholder='Username' onInput={e => {setUName(e.target.value)}} />
             <input type="password" placeholder='Password' onInput={e => {setPW(e.target.value)}} />
@@ -36,7 +48,7 @@ export default function SignUp() {
         <p>
             By signing up, you agree to our Terms , Data Policy and Cookies Policy .
         </p>
-            <button type="submit" disabled={(email == '' || name == '' || uName == '' || pw == '')} onSubmit={e => console.log(e)} >Sign up</button>
+            <button type="submit" disabled={(!email || !name || !uName || !pw)}>Sign up</button>
         </form>
       </div>
       <div className={s.new}>
