@@ -33,3 +33,56 @@
 .panel-btn:not(:first-child){
     margin-left: 22px;
 }
+.account{
+    height: 24px;
+    width: 24px;
+    margin-left: 22px;
+    position: relative;
+}
+
+.icon img{
+    height: 24px;
+    width: 24px;
+    border-radius: 50px;
+}
+.dropdown{
+    top: 40px;
+    left: -180px;
+    position: absolute;
+    background: #fff;
+    width: 230px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .0975);
+}
+.dropdown a{
+    color: var(--blck-clr);
+    text-decoration: none;
+}
+.tab{
+    display: flex;
+    padding: 8px 16px;
+}
+.dropdown a:first-child .tab{
+    padding-top: 12px;
+}
+
+.tab svg{
+    margin-right: 12px;
+    height: 16px;
+    width: 16px;
+}
+.label{
+    display: flex;
+    align-items: center;
+    height: 21px;
+    line-height: 18px;
+}
+.logout{
+    border-top: 1px solid var(--border-grey);
+    margin-bottom: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+.tab:hover, .logout:hover{
+    background-color: var(--grey-100);
+}
