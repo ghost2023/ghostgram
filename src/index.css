@@ -19,6 +19,9 @@ body{
     background: var(--grey-100);
     min-height: 100vh;
 }
+input, button{
+    font-family: inherit;
+}
 
 *:focus-visible{
     outline: none
@@ -27,7 +30,8 @@ svg{
     width: 24px;
     height: 24px;
 }
-
+button:not(:disabled){cursor: pointer;}
+button:disabled{opacity: 0.3;}
 .overlay{
     display: flex;
     position: fixed;
