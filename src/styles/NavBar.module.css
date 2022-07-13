@@ -29,6 +29,7 @@
     display: flex;
     color: var(--blck-clr);
     cursor: pointer;
+    position: relative;
 }
 .panel-btn:not(:first-child){
     margin-left: 22px;
@@ -40,6 +41,12 @@
     position: relative;
 }
 
+.icon{
+    display: flex;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
 .icon img{
     height: 24px;
     width: 24px;
@@ -50,10 +57,28 @@
     left: -180px;
     position: absolute;
     background: #fff;
-    width: 230px;
     border-radius: 6px;
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, .0975);
+    display: none;
+    z-index: 500;
 }
+.account .dropdown{
+    width: 230px;
+}
+.hider{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 490;
+    display: none;
+}
+.hider.open{display: block;}
+.foc .icon{
+    box-shadow: 0 0 0 1px white ,0 0 0 2px black
+}
+.foc .dropdown{display:block}
 .dropdown a{
     color: var(--blck-clr);
     text-decoration: none;
