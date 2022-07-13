@@ -14,7 +14,7 @@ export default function Login() {
 
   function loginSub(e){
     e.preventDefault()
-    signInWithEmailAndPassword(getAuth, email, password).then(() => {
+    signInWithEmailAndPassword(getAuth(), email, password).then(() => {
       nav('/')
     })
   }
