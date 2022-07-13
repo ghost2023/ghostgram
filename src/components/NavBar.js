@@ -19,10 +19,10 @@ export default function NavBar({ page }) {
   console.log(user)
   useEffect(() => {
     if(!user.currentUser) nav('/login')
-    get(dbRef(DB, 'profiles/' + user.uid)).then(dat => {
+    get(dbRef(DB, 'users/' + user.uid)).then(dat => {
       const data = dat.val()
       setProfile(data)
-      if(data.pic) {}
+      if(data?.pic) {}
     })
   },[])
 

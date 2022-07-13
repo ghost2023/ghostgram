@@ -18,8 +18,9 @@ export default function SignUp() {
       e.preventDefault()
       createUserWithEmailAndPassword(auth, email, pw).then(userCredential => {
         console.log(userCredential.user)
-        set(ref(DB, 'profiles/' + userCredential.user.uid), {
+        set(ref(DB, 'users/' + userCredential.user.uid), {
           name,
+          email,
           username: uName,
         })
         nav('/')
