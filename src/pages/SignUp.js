@@ -1,4 +1,4 @@
-import s from '../styles/SignUp.module.css'
+import s from '../styles/Login.SignUp.module.css'
 import img from '../assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
@@ -48,7 +48,7 @@ export default function SignUp() {
         <p>
             By signing up, you agree to our Terms , Data Policy and Cookies Policy .
         </p>
-            <button type="submit" disabled={(!email || !name || !uName || !pw)}>Sign up</button>
+            <button type="submit" className={s.signbtn} disabled={(!email || !name || !uName || !pw)}>Sign up</button>
         </form>
       </div>
       <div className={s.new}>
