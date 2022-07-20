@@ -6,7 +6,7 @@ export default function HomeBtn({ page, isOpen }) {
     
     return (
       <Link to='/' className={s['panel-btn']}>
-        <svg>{svgPath}</svg>
+        <svg width="24" height="24">{svgPath}</svg>
       </Link>
     )
   }

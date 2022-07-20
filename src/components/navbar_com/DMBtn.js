@@ -6,7 +6,7 @@ export default function DMBtn({ page }) {
     <polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></polygon></>
     return (
       <Link to='/direct/inbox' className={s['panel-btn']}>
-        <svg>
+        <svg width="24" height="24">
             {svgPath}
         </svg>
       </Link>

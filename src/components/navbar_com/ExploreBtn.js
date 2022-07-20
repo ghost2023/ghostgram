@@ -12,7 +12,7 @@ export default function ExploreBtn({page}) {
   
   return (
     <Link to='/explore' className={s['panel-btn']}>      
-      <svg >
+      <svg width="24" height="24" >
         {svgPath}
       </svg>
     </Link>
