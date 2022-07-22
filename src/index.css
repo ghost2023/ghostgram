@@ -19,17 +19,12 @@ body{
     background: var(--grey-100);
     min-height: 100vh;
 }
-input, button{
+input, button,textarea{
     font-family: inherit;
 }
-
-*:focus-visible{
-    outline: none
-}
-svg{
-    width: 24px;
-    height: 24px;
-}
+p,h1,h2,h3,h4,h5,h6{margin: 0;}
+a{text-decoration: none;}
+*:focus-visible{outline: none}
 button:not(:disabled){cursor: pointer;}
 button:disabled{opacity: 0.3;}
 .overlay{
