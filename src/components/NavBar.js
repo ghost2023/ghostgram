@@ -24,9 +24,9 @@ export default function NavBar({ page }) {
   const [isDBOpen, setDBOpen] = useState(false)
   
   useEffect(() => {
-    console.log(user)
+    console.log(user.currentUser)
     if(!user.currentUser) nav('/login')
-    get(dbRef(DB, 'users/' + user.uid)).then(dat => {
+    get(dbRef(DB, 'users/' + user.currentUser.uid)).then(dat => {
       const data = dat.val()
       setProfile(data)
       if(data?.pic) {}
@@ -54,7 +54,7 @@ export default function NavBar({ page }) {
         </div>
       </div>
       <div className={s.hider + (isDBOpen || isFDOpen ? ` ${s.open}` : '' )} onClick={() => {setFDOpen(false);setDBOpen(false)}}></div>
-      {isNewPostOpen? <NewPost closeNewPost={() => openNewPost(false)}/>:<></>}
+      {isNewPostOpen? <NewPost closeNewPost={() => openNewPost(false)} profile={profile}/>:<></>}
     </div>
   )
 }
