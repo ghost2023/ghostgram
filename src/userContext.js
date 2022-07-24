@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 import { auth, DB, SG } from './fb-config'
-import { get, ref as dbRef } from "firebase/database";
+import { get, ref as dbRef, set } from "firebase/database";
 import { ref, getDownloadURL } from "firebase/storage";
 
 const userContext = createContext()
@@ -10,7 +10,7 @@ export function useAuth(){
     return useContext(userContext)
 }
 
-export default function userAuthProvider({ children }) {
+export default function UserAuthProvider({ children }) {
     const [user, setUser] = useState({});
 
     function login(email, password) {
@@ -52,7 +52,7 @@ export default function userAuthProvider({ children }) {
         return () => unsubscribe();
       }, []);
 
-  return (<userContext.Provider value={{login, signUp, logOut}}>
+  return (<userContext.Provider value={{login, signUp, logOut, getProfileURL, }}>
       {children}
     </userContext.Provider>)
 }
