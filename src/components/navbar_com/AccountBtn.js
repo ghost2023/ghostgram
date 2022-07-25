@@ -1,21 +1,24 @@
 import s from '../../styles/NavBar.module.css'
-import { Link, useNavigate } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import PP from '../../assets/default_profile.png';
-import { useState } from 'react';
+import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../userContext'
 
-export default function AccountBtn({ user, profile, isDBOpen, openDB }) {
-    const nav = useNavigate()
-    const [pPic, setPPic] = useState(PP)
+export default function AccountBtn({ isDBOpen, openDB }) {
+  const { user, logOut, getProfileURL } = useAuth()
+  const [profile, setProfile] = useState('')
 
+  useEffect(() => {
+    getProfileURL()
+    .then(url => setProfile(url))
+  }, [])
 
   return (
     <div className={s.account + (isDBOpen ? ' ' + s.foc: '')}>
             <div className={s.icon} onClick={openDB}>
-              <img src={pPic} alt="" />
+              <img src={profile} alt="" />
             </div>
             <div className={s.dropdown}>
-              <Link to={'profile?.username'}>
+              <Link to={user?.username}>
                 <div className={s.tab}>
                   <svg viewBox='0 0 24 24'>
                     <circle cx="12.004" cy="12.004" fill="none" r="10.5" stroke="currentColor" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="2"></circle>
@@ -27,7 +30,7 @@ export default function AccountBtn({ user, profile, isDBOpen, openDB }) {
                   </div>
                 </div>
               </Link>
-              <Link to={'profile?.username' + '/saved'}>
+              <Link to={user?.username + '/saved'}>
                 <div className={s.tab}>
                   <svg viewBox='0 0 24 24'>
                     <polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon>
@@ -37,7 +40,7 @@ export default function AccountBtn({ user, profile, isDBOpen, openDB }) {
                   </div>
                 </div>
               </Link>
-              <Link to={'profile?.username' + '/accounts/edit'}>
+              <Link to={user?.username + '/accounts/edit'}>
                 <div className={s.tab}>
                   <svg viewBox='0 0 24 24'>
                     <circle cx="12" cy="12" fill="none" r="8.635" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></circle>
@@ -48,7 +51,7 @@ export default function AccountBtn({ user, profile, isDBOpen, openDB }) {
                   </div>
                 </div>
               </Link>
-              <div className={s.logout} onClick={() => signOut(user).then(() => nav('/login'))}>Log Out</div>
+              <div className={s.logout} onClick={logOut}>Log Out</div>
             </div>
     </div>
   )
