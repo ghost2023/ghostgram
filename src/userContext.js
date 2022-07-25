@@ -11,7 +11,7 @@ export function useAuth(){
 }
 
 export default function UserAuthProvider({ children }) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState();
 
     function login(email, password) {
       return signInWithEmailAndPassword(auth, email, password);
@@ -42,9 +42,10 @@ export default function UserAuthProvider({ children }) {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-          console.log("Auth", currentuser);
-          const userRef  = dbRef(DB, `users/${currentuser?.user}`)
-          get(userRef).then((data) => { 
+          const userRef  = dbRef(DB, `users/${currentuser?.uid}`)
+          get(userRef).then((data) => {
+            console.log(data.val()) 
+            console.log("Auth", {...currentuser, ...data.val()});
             setUser({...currentuser, ...data.val()});
           })
         });
@@ -52,7 +53,7 @@ export default function UserAuthProvider({ children }) {
         return () => unsubscribe();
       }, []);
 
-  return (<userContext.Provider value={{login, signUp, logOut, getProfileURL, }}>
+  return (<userContext.Provider value={{ user, login, signUp, logOut, getProfileURL, }}>
       {children}
     </userContext.Provider>)
 }
