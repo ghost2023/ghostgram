@@ -1,19 +1,38 @@
-import ReactDOM from "react-dom"
 import s from '../styles/NewPost.module.css'
-import defPic from '../assets/default_profile.png'
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { set, ref as dbRef } from 'firebase/database';
 import { ref, uploadBytes } from 'firebase/storage'
 import { DB,SG } from '../fb-config'
+import Overlay from "./Overlay";
+import { useAuth } from '../userContext'
 
-export default function NewPost({ closeNewPost, profile }) {
+export default function NewPost({ closeNewPost }) {
   const [isFilesValid, setFilesValidity] = useState(true)
   const [firstInValidFile, setFirstInValid] = useState("")
   const [validFiles, setValidFiles] = useState([])
   const [pageNum, setPageNum] = useState(0)
+  const [hideStats, setHideStats] = useState(false)
+  const [allowComment, setAllowComment] = useState(true)
+  const [caption, setCaption] = useState("")
+  const { user } = useAuth()
   const numberOfPage = 2
 
-  console.log(1234567)
+  function upload(){
+    const fileNames = []
+    Array.from(validFiles).forEach(f => {
+      const fileName = `posts/images/${Date.now()}.jpg`
+      fileNames.push(fileName)
+      const stRef = ref(SG, fileName)
+      uploadBytes(stRef, f)
+    });
+    set(dbRef(DB, 'posts/'), {
+      user: user.uid,
+      caption,
+      content: fileNames,
+      hideStats,
+      allowComment
+    })
+  }
 
   function fileImport(e, isDrop = false){
     e.preventDefault();
@@ -30,33 +49,29 @@ export default function NewPost({ closeNewPost, profile }) {
     setValidFiles(files)
   }
 
-  return ReactDOM.createPortal(
-    <>
-    <div className='overlay' onClick={closeNewPost}>
-
-    <div className={s.portal} onClick={e => e.stopPropagation()}>
-        <div className={s.header}>
-          {!!validFiles.length && <div className={s.prevbtn}>
-            <svg height="24" role="img" viewBox="0 0 24 24" width="24">
-              <line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004"></line>
-              <polyline fill="none" points="9.276 4.726 2.001 12.004 9.276 19.274" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polyline>
-            </svg>
-          </div>}
-          <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
-          {!!validFiles.length && <div className={s.nextbtn}>
-            <button>Next</button>
-          </div>}
-        </div>
-        {validFiles.length ? 
-          <SharePage files={Array.from(validFiles)} profile={profile}/>:
-          <InitialPage isValid={isFilesValid} fileImport={fileImport} invalidFile={firstInValidFile}/>
-        }
-    </div>
-    <CloseBtn/>
-    </div>
-    </>,
-    document.getElementById('portal')
-  )
+  return (
+    <Overlay onClick={closeNewPost}>
+      <div className={s.portal} onClick={e => e.stopPropagation()}>
+          <div className={s.header}>
+            {!!validFiles.length && <div className={s.prevbtn}>
+              <svg height="24" role="img" viewBox="0 0 24 24" width="24">
+                <line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004"></line>
+                <polyline fill="none" points="9.276 4.726 2.001 12.004 9.276 19.274" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polyline>
+              </svg>
+            </div>}
+            <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
+            {!!validFiles.length && <div className={s.nextbtn}>
+              <button onClick={upload}>Share</button>
+            </div>}
+          </div>
+          {validFiles.length ? 
+            <SharePage files={Array.from(validFiles)} setCaption={setCaption} setHideStats={setHideStats} setAllowComment={setAllowComment} />:
+            <InitialPage isValid={isFilesValid} fileImport={fileImport} invalidFile={firstInValidFile}/>
+          }
+      </div>
+      <CloseBtn/>
+    </Overlay>
+)
 }
 function InitialPage({ isValid, fileImport, invalidFile}){
   const inpRef = useRef(0)
@@ -74,22 +89,16 @@ function InitialPage({ isValid, fileImport, invalidFile}){
     </div>
   )
 }
-function SharePage({ files, profile }){
+function SharePage({ files, setCaption, setAllowComment, setHideStats }){
   const arrow = "M21 17.502a.997.997 0 01-.707-.293L12 8.913l-8.293 8.296a1 1 0 11-1.414-1.414l9-9.004a1.03 1.03 0 011.414 0l9 9.004A1 1 0 0121 17.502z"
   const [isAccessExpanded, setAccessExpanded] = useState(false)
   const [isAdvanceExpanded, setAdvanceExpanded] = useState(false)
-  const [pic, setPic] = useState()
+  const [pic, setPic] = useState("")
+  const { user, getProfileURL } = useAuth();
 
-  function upload(){
-    const fileNames = []
-    files.forEach(f => {
-      const timeStamp = Date.now()
-      fileNames.push(timeStamp)
-      const stRef = ref(SG, `posts/images/${timeStamp}`)
-      uploadBytes(stRef, f)
-    });
-     
-  }
+  useEffect(() => {
+    getProfileURL().then(url => setPic(url))
+  }, [])
 
   return(
     <div className={s.share}>
@@ -98,10 +107,10 @@ function SharePage({ files, profile }){
       </div>
       <div className={s.settings}>
         <div className={s.profile}>
-          <div className={s.profileicon}><img src={defPic} alt="" /></div>
-          <div className={s.profilename}>{profile?.username}</div>
+          <div className={s.profileicon}><img src={pic} alt="" /></div>
+          <div className={s.profilename}>{user.username}</div>
         </div>
-        <textarea name="" id="" cols="30" rows="10" className={s.caption} placeholder="Write a caption..."></textarea>
+        <textarea name="" id="" cols="30" rows="10" className={s.caption} placeholder="Write a caption..." onInput={e => setCaption(e.target.value)}></textarea>
         <div className={s["location-wrapper"]}></div>
         <div className={s["accessibility-wrapper"]}>
           <div className={`${s.expander} ${isAccessExpanded && s.expanded}`} onClick={() => setAccessExpanded(prev => !prev)}>
