@@ -18,8 +18,7 @@ export default function UserAuthProvider({ children }) {
     }
     async function signUp(name, username, email, password) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid
-      set(ref(DB, 'users/' + uid), {
+      set(dbRef(DB, 'users/' + userCredential.user.uid), {
         name,
         email,
         username,
@@ -29,22 +28,18 @@ export default function UserAuthProvider({ children }) {
     function logOut() {
       return signOut(auth);
     }
-    async function getProfileURL(){
-      const imgRef = ref(SG, 'profiles/' + user.profile)
-      return await getDownloadURL(SG, imgRef)
-    }
-    function getFollowers(){
-
-    }
-    function getFollowing(){
-
+    function getProfileURL(){
+      return getDownloadURL(ref(SG, 'profiles/' + user.profile)) 
     }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+          if (!currentuser){
+            setUser()
+            return console.log('no user')
+          }
           const userRef  = dbRef(DB, `users/${currentuser?.uid}`)
           get(userRef).then((data) => {
-            console.log(data.val()) 
             console.log("Auth", {...currentuser, ...data.val()});
             setUser({...currentuser, ...data.val()});
           })
