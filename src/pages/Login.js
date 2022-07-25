@@ -2,21 +2,18 @@ import s from '../styles/Login.SignUp.module.css'
 import bannerImg from '../assets/banner.png'
 import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom'
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../userContext'
 
 export default function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const nav = useNavigate()
+  const { login } = useAuth()
 
   function loginSub(e){
     e.preventDefault()
-    signInWithEmailAndPassword(getAuth(), email, password).then(() => {
-      nav('/')
-    })
+    login(email, password)
   }
 
   return (
