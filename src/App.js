@@ -23,7 +23,6 @@ function App() {
 
 function PrivateRoute({  }) {
   const { user } = useAuth()
-  console.log(user)
   if (!user) {
     return <Login/>;
   }
