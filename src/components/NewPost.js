@@ -1,6 +1,6 @@
 import s from '../styles/NewPost.module.css'
 import { useState, useRef, useEffect } from "react"
-import { set, ref as dbRef } from 'firebase/database';
+import { set, ref as dbRef, push } from 'firebase/database';
 import { ref, uploadBytes } from 'firebase/storage'
 import { DB,SG } from '../fb-config'
 import Overlay from "./Overlay";
@@ -12,7 +12,7 @@ export default function NewPost({ closeNewPost }) {
   const [validFiles, setValidFiles] = useState([])
   const [pageNum, setPageNum] = useState(0)
   const [hideStats, setHideStats] = useState(false)
-  const [allowComment, setAllowComment] = useState(true)
+  const [noComment, setNoComment] = useState(false)
   const [caption, setCaption] = useState("")
   const { user } = useAuth()
   const numberOfPage = 2
@@ -25,13 +25,14 @@ export default function NewPost({ closeNewPost }) {
       const stRef = ref(SG, fileName)
       uploadBytes(stRef, f)
     });
-    set(dbRef(DB, 'posts/'), {
+    const newPostRef = push(dbRef(DB, 'posts/'))
+    set(newPostRef, {
       user: user.uid,
       caption,
       content: fileNames,
       hideStats,
-      allowComment
-    })
+      noComment
+    }).then(() => closeNewPost())
   }
 
   function fileImport(e, isDrop = false){
@@ -65,7 +66,7 @@ export default function NewPost({ closeNewPost }) {
             </div>}
           </div>
           {validFiles.length ? 
-            <SharePage files={Array.from(validFiles)} setCaption={setCaption} setHideStats={setHideStats} setAllowComment={setAllowComment} />:
+            <SharePage files={Array.from(validFiles)} {...{setCaption, setHideStats, setNoComment, hideStats, noComment}}/>:
             <InitialPage isValid={isFilesValid} fileImport={fileImport} invalidFile={firstInValidFile}/>
           }
       </div>
@@ -89,7 +90,7 @@ function InitialPage({ isValid, fileImport, invalidFile}){
     </div>
   )
 }
-function SharePage({ files, setCaption, setAllowComment, setHideStats }){
+function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, noComment }){
   const arrow = "M21 17.502a.997.997 0 01-.707-.293L12 8.913l-8.293 8.296a1 1 0 11-1.414-1.414l9-9.004a1.03 1.03 0 011.414 0l9 9.004A1 1 0 0121 17.502z"
   const [isAccessExpanded, setAccessExpanded] = useState(false)
   const [isAdvanceExpanded, setAdvanceExpanded] = useState(false)
@@ -114,7 +115,7 @@ function SharePage({ files, setCaption, setAllowComment, setHideStats }){
         <div className={s["location-wrapper"]}></div>
         <div className={s["accessibility-wrapper"]}>
           <div className={`${s.expander} ${isAccessExpanded && s.expanded}`} onClick={() => setAccessExpanded(prev => !prev)}>
-            <p>Accessibility</p>
+            <h2>Accessibility</h2>
             <svg height="16" role="img" viewBox="0 0 24 24" width="16">
               <path d={arrow}></path>
             </svg>
@@ -128,13 +129,30 @@ function SharePage({ files, setCaption, setAllowComment, setHideStats }){
         </div>
         <div className={s["advance-wrapper"]}>
           <div className={`${s.expander} ${isAdvanceExpanded && s.expanded}`} onClick={() => setAdvanceExpanded(prev => !prev)}>
-            <p>Advanced settings</p>
+            <h2>Advanced settings</h2>
             <svg height="16" role="img" viewBox="0 0 24 24" width="16">
               <path d={arrow}></path>
             </svg>
           </div>
           {isAdvanceExpanded && <div className={`${s.advance} ${s.expand}`}>
-            <p>Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.</p>
+            <div className={s['advance-setting']}>
+              <div className={s['setting-wrapper']}>
+                <h1>Hide like and view counts on this post</h1>
+                <div className={s['toggle-wrapper']}>
+                  <div className={`${s.toggle} ${hideStats? s.checked : ''}`} onClick={() => setHideStats(p => !p)}><span></span></div>
+                </div>
+              </div>
+              <p>Only you will see the total number of likes and views on this post. You can change this later by going to the ··· menu at the top of the post. To hide like counts on other people's posts, go to your account settings.</p>
+            </div>
+            <div className={s['advance-setting']}>
+              <div className={s['setting-wrapper']}>
+                <h1>Turn off commenting</h1>
+                <div className={s['toggle-wrapper']}>
+                  <div className={`${s.toggle} ${noComment? s.checked : ''}`} onClick={() => setNoComment(p => !p)}><span></span></div>
+                </div>
+              </div>
+              <p>You can change this later by going to the ··· menu at the top of your post.</p>
+            </div>
             
           </div>}
         </div>

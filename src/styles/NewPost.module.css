@@ -8,6 +8,7 @@
     background: #fff;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 .header{
     display: flex;
@@ -99,7 +100,7 @@
 .share{
     display: flex;
     width: 100%;
-    height: calc(100% - 42px);
+    height: calc(100% - 41px);
 }
 .preview{
     display: flex;
@@ -114,6 +115,10 @@
     height: 100%;
     width: 340px;
     border-left: 1px solid var(--border-grey);
+}
+.settings p{
+    color: var(--grey-clr);
+    font-size: 12px;
 }
 .profile{
     display: flex;
@@ -144,12 +149,15 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 16px;
     padding: 14px 16px;
     border-top: 1px solid var(--border-grey);
     cursor: pointer;
 }
-.expander.expanded{font-weight: 600;}
+.expander h2{
+    font-size: 16px;
+    font-weight: 400;
+}
+.expander.expanded h2{font-weight: 600;}
 .advance-wrapper .expander:not(.expanded){border-bottom: 1px solid var(--border-grey);}
 .expander svg{transform: rotate(180deg);}
 .expander.expanded svg{transform: rotate(0deg);}
@@ -159,4 +167,32 @@
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+.advance-setting p{padding: 12px 0;}
+.setting-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.setting-wrapper h1{
+    font-size: 16px;
+    font-weight: 400;
+}
+.setting-wrapper .toggle.checked{
+    background: var(--lg-blue);
+    justify-content: end;
+}
+.toggle{
+    height: 28px;
+    width: 44px;
+    border-radius: 28px 28px;
+    background: var(--grey-clr);
+    display: flex;
+    padding: 3px;
+    cursor: pointer;
+}
+.toggle span{
+    height: 22px;
+    width: 22px;
+    background: #fff;
+    border-radius: 50%;
 }
