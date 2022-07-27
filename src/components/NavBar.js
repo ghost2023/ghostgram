@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom'
 import img from '../assets/logo.png'
 import { useState } from 'react'
 import AccountBtn from './navbar_com/AccountBtn'
-import HomeBtn from './navbar_com/HomeBtn'
-import DMBtn from './navbar_com/DMBtn'
-import ExploreBtn from './navbar_com/ExploreBtn'
+import House from './svgs/House'
+import Kite from './svgs/Kite'
+import Compass from './svgs/Compass'
 import ActivityBtn from './navbar_com/ActivityBtn'
-import PostBtn from './navbar_com/PostBtn'
+import Add from './svgs/Add'
 
 export default function NavBar({ page }) {
   
@@ -29,10 +29,18 @@ export default function NavBar({ page }) {
           <Search/> 
         </div>
         <div className={s.panel}>
-          <HomeBtn page={page} isOpen={isDBOpen || isFDOpen}/> 
-          <DMBtn page={page}/> 
-          <PostBtn open={() => openNewPost(true)} isOpen = {isNewPostOpen}/> 
-          <ExploreBtn page={page}/> 
+          <Link to='/' className={s['panel-btn']}>
+            <House full={page == 'home'}/>
+          </Link>
+          <Link to='/direct/inbox' className={s['panel-btn']}>
+            <Kite full={page == 'home'}/>
+          </Link>
+          <div className={s['panel-btn']} onClick={() => openNewPost(true)}>
+            <Add full={isNewPostOpen}/>
+          </div>
+          <Link to='/explore' className={s['panel-btn']}>      
+            <Compass full={page == 'explore'} />
+          </Link>
           <ActivityBtn isOpen={isFDOpen} open={() => setFDOpen(true)}/> 
           <AccountBtn isDBOpen={isDBOpen} openDB={() => setDBOpen(true)} />
         </div>
