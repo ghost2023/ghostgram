@@ -51,7 +51,7 @@ export default function UserAuthProvider({ children }) {
         return () => unsubscribe();
       }, []);
 
-  return (<userContext.Provider value={{ user, login, signUp, logOut, getProfileURL, }}>
+  return (<userContext.Provider value={{ user, login, signUp, logOut }}>
       {children}
     </userContext.Provider>)
 }
