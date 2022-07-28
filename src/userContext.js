@@ -23,13 +23,14 @@ export default function UserAuthProvider({ children }) {
         email,
         username,
         profile: 'default-avatar.jpg',
+        occupation: '',
+        bio: '',
+        posts: 0,
+        isVerified: false,
       })
     }
     function logOut() {
       return signOut(auth);
-    }
-    function getProfileURL(){
-      return getDownloadURL(ref(SG, 'profiles/' + user.profile)) 
     }
 
     useEffect(() => {
@@ -41,7 +42,9 @@ export default function UserAuthProvider({ children }) {
           const userRef  = dbRef(DB, `users/${currentuser?.uid}`)
           get(userRef).then((data) => {
             console.log("Auth", {...currentuser, ...data.val()});
-            setUser({...currentuser, ...data.val()});
+            getDownloadURL(ref(SG, `profiles/${data.val().profile}`)).then(url => {
+              setUser({...currentuser, ...data.val(), profile: url});
+            })
           })
         });
     
