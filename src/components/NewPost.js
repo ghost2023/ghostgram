@@ -1,10 +1,11 @@
 import s from '../styles/NewPost.module.css'
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { set, ref as dbRef, push } from 'firebase/database';
 import { ref, uploadBytes } from 'firebase/storage'
 import { DB,SG } from '../fb-config'
 import Overlay from "./Overlay";
 import { useAuth } from '../userContext'
+import Chevron from './svgs/Chevron';
 
 export default function NewPost({ closeNewPost }) {
   const [isFilesValid, setFilesValidity] = useState(true)
@@ -43,7 +44,7 @@ export default function NewPost({ closeNewPost }) {
     const isAllfilesValid = Array.from(files).every(i => i.type.split('/')[0] === 'image' || i.type.split('/')[0] === 'video')
     setFilesValidity(isAllfilesValid)
     if(!isAllfilesValid) {
-      const firstInvalid = Array.from(files).find(i => i.type.split('/')[0] != 'image' || i.type.split('/')[0] != 'video')
+      const firstInvalid = Array.from(files).find(i => i.type.split('/')[0] !== 'image' || i.type.split('/')[0] !== 'video')
       setFirstInValid(firstInvalid.name)
       return
     }
@@ -91,15 +92,10 @@ function InitialPage({ isValid, fileImport, invalidFile}){
   )
 }
 function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, noComment }){
-  const arrow = "M21 17.502a.997.997 0 01-.707-.293L12 8.913l-8.293 8.296a1 1 0 11-1.414-1.414l9-9.004a1.03 1.03 0 011.414 0l9 9.004A1 1 0 0121 17.502z"
   const [isAccessExpanded, setAccessExpanded] = useState(false)
   const [isAdvanceExpanded, setAdvanceExpanded] = useState(false)
-  const [pic, setPic] = useState("")
-  const { user, getProfileURL } = useAuth();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    getProfileURL().then(url => setPic(url))
-  }, [])
 
   return(
     <div className={s.share}>
@@ -108,7 +104,7 @@ function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, n
       </div>
       <div className={s.settings}>
         <div className={s.profile}>
-          <div className={s.profileicon}><img src={pic} alt="" /></div>
+          <div className={s.profileicon}><img src={user.profile} alt="" /></div>
           <div className={s.profilename}>{user.username}</div>
         </div>
         <textarea name="" id="" cols="30" rows="10" className={s.caption} placeholder="Write a caption..." onInput={e => setCaption(e.target.value)}></textarea>
@@ -116,9 +112,7 @@ function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, n
         <div className={s["accessibility-wrapper"]}>
           <div className={`${s.expander} ${isAccessExpanded && s.expanded}`} onClick={() => setAccessExpanded(prev => !prev)}>
             <h2>Accessibility</h2>
-            <svg height="16" role="img" viewBox="0 0 24 24" width="16">
-              <path d={arrow}></path>
-            </svg>
+            <Chevron />
           </div>
           {isAccessExpanded && <div className={`${s.accessibilty} ${s.expand}`}>
             <p>Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.</p>
@@ -130,9 +124,7 @@ function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, n
         <div className={s["advance-wrapper"]}>
           <div className={`${s.expander} ${isAdvanceExpanded && s.expanded}`} onClick={() => setAdvanceExpanded(prev => !prev)}>
             <h2>Advanced settings</h2>
-            <svg height="16" role="img" viewBox="0 0 24 24" width="16">
-              <path d={arrow}></path>
-            </svg>
+            <Chevron/>
           </div>
           {isAdvanceExpanded && <div className={`${s.advance} ${s.expand}`}>
             <div className={s['advance-setting']}>
