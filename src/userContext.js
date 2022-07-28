@@ -27,6 +27,7 @@ export default function UserAuthProvider({ children }) {
         bio: '',
         posts: 0,
         isVerified: false,
+        follows: [],
       })
     }
     function logOut() {
