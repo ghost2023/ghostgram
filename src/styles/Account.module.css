@@ -1,0 +1,85 @@
+.page{
+    display: flex;
+    flex-direction: column;
+    font-size: 100%;
+    vertical-align: baseline;
+    flex-grow: 1;
+    margin: 0 auto 30px;
+    max-width: 935px;
+    margin-bottom: 0;
+    box-sizing: content-box;
+    width: calc(100% - 40px);
+    padding: 24px 20px 0;
+}
+.profile{
+    display: flex;
+    margin-bottom: 44px;
+    /* max-width: ; */
+}
+.profilepic-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+    flex-grow: 1;
+}
+.profilepic img{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+.detail{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+.username-wrapper{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.username h1{
+    font-weight: 300;
+}
+.btns{
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+.btns button{
+    height: 30px;
+    padding: 5px 10px;
+    margin-left: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-grey);
+    background: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+button.followbtn{
+    padding: 0 25px;
+}
+.optionsbtn{
+    background: none;
+    display: flex;
+    padding: 8px;
+    border: none;
+    margin-left: 5px;
+}
+.stats{
+    display: flex;
+    font-size: 16px;
+}
+.stats span{
+    font-weight: 600;
+}
+.posts, .followers{
+    margin-right: 40px;
+}
+button.b{
+    border: none;
+    color: #fff;
+    fill: #fff;
+    background: var(--lg-blue);
+}
