@@ -1,8 +1,8 @@
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set, update } from "firebase/database";
+import { getDownloadURL, ref } from "firebase/storage";
 import { createContext, useContext, useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
-import { auth, DB, SG } from './fb-config'
-import { get, ref as dbRef, set } from "firebase/database";
-import { ref, getDownloadURL } from "firebase/storage";
+import { auth, DB, SG } from './fb-config';
 
 const userContext = createContext()
 
@@ -12,6 +12,8 @@ export function useAuth(){
 
 export default function UserAuthProvider({ children }) {
     const [user, setUser] = useState();
+    const [follows, setFollows] = useState([]);
+    const [isLoading, setLoading] = useState(true);
 
     function login(email, password) {
       return signInWithEmailAndPassword(auth, email, password);
@@ -25,34 +27,72 @@ export default function UserAuthProvider({ children }) {
         profile: 'default-avatar.jpg',
         occupation: '',
         bio: '',
+        followings: 0,
         posts: 0,
         isVerified: false,
-        follows: [],
       })
     }
     function logOut() {
       return signOut(auth);
     }
+    async function follow(uid){
+      if(follows.some(i => i[1] === uid)) return
+      const followRef = push(dbRef(DB, 'follows/'))
+      await set(followRef, {
+        follower: user.uid,
+        followe: uid
+      })
+      updateFollow()
+    }
+    async function unFollow(uid){
+      const followOb = follows.find(i => i[1] === uid) 
+      if(!followOb) return
+      const followRef = dbRef(DB, 'follows/' + followOb[0])
+      await remove(followRef)
+      updateFollow()
+    }
+    async function updateFollow(){
+      if(!user) return
+      const followsQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(user.uid))
+      const followsData = (await get(followsQuery)).val()
+      if(!followsData){
+        await update(dbRef(DB, `users/${user.uid}`), {followings: 0})
+        setUser(p => {return {...p, followings: 0}})
+        setFollows([])
+        return
+      }
+      const followsArr = Object.entries(followsData).map(([id, body]) => [id, body.followe])
+      console.log(followsArr)
+      await update(dbRef(DB, `users/${user.uid}`), {followings: followsArr.length})
+      setUser(p => {return {...p, followings: followsArr.length}})
+      setFollows(followsArr)
+    }
 
     useEffect(() => {
+        // watch for any user changes
         const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
           if (!currentuser){
-            setUser()
+            setLoading(false)
             return console.log('no user')
           }
           const userRef  = dbRef(DB, `users/${currentuser?.uid}`)
           get(userRef).then((data) => {
             console.log("Auth", {...currentuser, ...data.val()});
+
+            // get and store profile image Url
             getDownloadURL(ref(SG, `profiles/${data.val().profile}`)).then(url => {
               setUser({...currentuser, ...data.val(), profile: url});
+              setLoading(false)
+              updateFollow()
             })
           })
         });
-    
+        
         return () => unsubscribe();
       }, []);
 
-  return (<userContext.Provider value={{ user, login, signUp, logOut }}>
+
+  return (<userContext.Provider value={{ user, isLoading, follows, login, signUp, logOut, follow, unFollow }}>
       {children}
     </userContext.Provider>)
 }
