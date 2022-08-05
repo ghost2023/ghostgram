@@ -1,11 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Account from './pages/Account';
 import Home from './pages/Home';
+import Loading from './pages/Loading';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import Account from './pages/Account';
-import Loading from './pages/Loading'
-import UserAuthProvider from "./userContext";
-import { useAuth } from "./userContext";
+import UserAuthProvider, { useAuth } from "./userContext";
 
 function App() {
   return (
