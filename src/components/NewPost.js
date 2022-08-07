@@ -1,10 +1,11 @@
-import s from '../styles/NewPost.module.css'
-import { useState, useRef } from "react"
-import { set, ref as dbRef, push } from 'firebase/database';
-import { ref, uploadBytes } from 'firebase/storage'
-import { DB,SG } from '../fb-config'
+import { push, ref as dbRef, set } from 'firebase/database';
+import { ref, uploadBytes } from 'firebase/storage';
+import { useRef, useState } from "react";
+import { DB, SG } from '../fb-config';
+import s from '../styles/NewPost.module.css';
+import { useAuth } from '../userContext';
 import Overlay from "./Overlay";
-import { useAuth } from '../userContext'
+import Arrow from './svgs/Arrow';
 import Chevron from './svgs/Chevron';
 
 export default function NewPost({ closeNewPost }) {
@@ -32,7 +33,8 @@ export default function NewPost({ closeNewPost }) {
       caption,
       content: fileNames,
       hideStats,
-      noComment
+      noComment,
+      timeStamp: Date.now()
     }).then(() => closeNewPost())
   }
 
@@ -55,12 +57,7 @@ export default function NewPost({ closeNewPost }) {
     <Overlay onClick={closeNewPost}>
       <div className={s.portal} onClick={e => e.stopPropagation()}>
           <div className={s.header}>
-            {!!validFiles.length && <div className={s.prevbtn}>
-              <svg height="24" role="img" viewBox="0 0 24 24" width="24">
-                <line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004"></line>
-                <polyline fill="none" points="9.276 4.726 2.001 12.004 9.276 19.274" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polyline>
-              </svg>
-            </div>}
+            {!!validFiles.length && <div className={s.prevbtn}><Arrow/></div>}
             <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
             {!!validFiles.length && <div className={s.nextbtn}>
               <button onClick={upload}>Share</button>
