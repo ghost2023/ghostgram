@@ -1,13 +1,25 @@
 .slider{
+    position: relative;
+}
+.hider{
+    overflow: hidden;
+}
+.container{
     display: flex;
-    height: 100%;
-    width: 100%;
-    position: absolute;
+    overflow: hidden;
 }
 .slide{
     display: flex;
     flex: 1;
-    height: 100%;
+}
+.indicators{
+    display: flex;
+    left: 50%;
+    transform: translateY(-100%);
+    margin: 15px 0;
+}
+.bottom{
+    transform: translateY(0);
 }
 .indicator{
     height: 6px;
@@ -19,11 +31,19 @@
 .current{
     background: var(--lg-blue);
 }
-.indicator, .btn{
+.indicators, .btn{
     position: absolute;
 }
 .btn{
     top: 50%;
+    padding: 16px 8px;
+    opacity: 0.7;
+}
+.btn svg {
+    fill: #fff;
+    color: #fff;
+    box-shadow: 0 0 4px #888;
+    border-radius: 50%;
 }
 .left{left:0}
 .right{right:0}
