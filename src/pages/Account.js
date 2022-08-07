@@ -17,13 +17,14 @@ export default function Account() {
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
     const [followersNum, setFollowersNum] = useState(0)
+    const [posts, setPost] = useState([])
 
     useEffect(() => {
         // if(!userAcc) return
         setUpProfile()
-        setIsFollowing(follows.some(i => i[1] === userAcc.uid))
+        console.log(follows, 'follows')
     },[])
-
+    
     function followUnFollow() {
         if(!isFollowing) follow(userAcc.uid)
         else unFollow(userAcc.uid)
@@ -42,8 +43,8 @@ export default function Account() {
         const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(uid))
         const followersData = await get(followersQuery)
         setFollowersNum(Object.keys(followersData.val())?.length || 0)
+        setIsFollowing(follows.some(i => i[1] === uid))
     }
-
 
   return (
     <>
@@ -79,8 +80,6 @@ export default function Account() {
             </main>
             <div className={s.stories}></div>
         </div>
-      
-
     </>
   )
 }
