@@ -51,19 +51,17 @@ export default function UserAuthProvider({ children }) {
       await remove(followRef)
       updateFollow()
     }
-    async function updateFollow(){
-      if(!user) return
-      const followsQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(user.uid))
+    async function updateFollow(uid = user.uid){
+      const followsQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(uid))
       const followsData = (await get(followsQuery)).val()
       if(!followsData){
-        await update(dbRef(DB, `users/${user.uid}`), {followings: 0})
+        await update(dbRef(DB, `users/${uid}`), {followings: 0})
         setUser(p => {return {...p, followings: 0}})
         setFollows([])
         return
       }
       const followsArr = Object.entries(followsData).map(([id, body]) => [id, body.followe])
-      console.log(followsArr)
-      await update(dbRef(DB, `users/${user.uid}`), {followings: followsArr.length})
+      await update(dbRef(DB, `users/${uid}`), {followings: followsArr.length})
       setUser(p => {return {...p, followings: followsArr.length}})
       setFollows(followsArr)
     }
@@ -76,14 +74,15 @@ export default function UserAuthProvider({ children }) {
             return console.log('no user')
           }
           const userRef  = dbRef(DB, `users/${currentuser?.uid}`)
-          get(userRef).then((data) => {
+          get(userRef).then(async (data) => {
             console.log("Auth", {...currentuser, ...data.val()});
 
             // get and store profile image Url
+            await updateFollow(currentuser.uid)
+
             getDownloadURL(ref(SG, `profiles/${data.val().profile}`)).then(url => {
               setUser({...currentuser, ...data.val(), profile: url});
               setLoading(false)
-              updateFollow()
             })
           })
         });
