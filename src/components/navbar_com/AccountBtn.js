@@ -1,9 +1,9 @@
-import s from '../../styles/NavBar.module.css'
 import { Link } from 'react-router-dom'
+import s from '../../styles/NavBar.module.css'
 import { useAuth } from '../../userContext'
-import Profile from '../svgs/Profile'
 import Gear from '../svgs/Gear'
 import Mark from '../svgs/Mark'
+import Profile from '../svgs/Profile'
 
 export default function AccountBtn({ isDBOpen, openDB }) {
   const { user, logOut } = useAuth()
@@ -11,7 +11,7 @@ export default function AccountBtn({ isDBOpen, openDB }) {
   return (
     <div className={s.account + (isDBOpen ? ' ' + s.foc: '')}>
             <div className={s.icon} onClick={openDB}>
-              <img src={user.profile} alt="" />
+              <img src={user.profileURL} alt="" />
             </div>
             <div className={s.dropdown}>
               <Link to={"/" + user?.username}>
