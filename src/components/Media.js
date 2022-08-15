@@ -8,5 +8,6 @@ export default function Media({ path }) {
     useEffect(() => {
         getDownloadURL(ref(SG, path)).then(u => setUrl(u))
     }, [])
-  return path.endsWith('.jpg')? <img src={url}></img> : <video src={url} controls></video>
+
+  return path.endsWith('.jpg')? <img src={url} /> : <video src={url} controls></video>
 }
