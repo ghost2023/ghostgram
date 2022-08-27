@@ -11,7 +11,7 @@ export default function AccountBtn({ isDBOpen, openDB }) {
   return (
     <div className={s.account + (isDBOpen ? ' ' + s.foc: '')}>
             <div className={s.icon} onClick={openDB}>
-              <img src={user.profileURL} alt="" />
+              <img src={user?.profileURL} alt="" />
             </div>
             <div className={s.dropdown}>
               <Link to={"/" + user?.username}>
