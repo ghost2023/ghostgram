@@ -1,3 +1,6 @@
+import { get, push, ref as dbRef, remove, set } from "firebase/database"
+import { DB } from "./fb-config"
+
 export function convertTime(intTime){
 
     const months = ['JANURARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'] 
@@ -29,4 +32,39 @@ export function convertTime(intTime){
     if(timeDiff > 1) return `${parseInt(timeDiff)} MINUTES AGO`
 
     return 'A MINUTE AGO'
+}
+
+export async function likePost(postId, user){
+    const likeref = dbRef(DB, `likes/${postId}/${user.username}`)
+
+    await set(likeref, {
+        username : user.username,
+        profile : user.profile,
+        timestamp: Date.now()
+    })
+    const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
+    await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount + 1)
+}
+
+export async function disLikePost(postId, username){
+    await remove(dbRef(DB, `likes/${postId}/${username}`))
+
+    const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
+    await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount - 1)
+}
+
+export async function commentPost(postId, user, content){
+    const commentRef = push(dbRef(DB,  `comments/${postId}/`))
+    
+    await set(commentRef, {
+        content,
+        userId: user.uid,
+        username: user.username,
+        userProfile: user.profile,
+        timestamp: Date.now(),
+    })
+    
+    const prevCommentCount = (await get(dbRef(DB, `comments/${postId}/count`))).val()
+    
+    await set(dbRef(DB, `comments/${postId}/count`), prevCommentCount + 1)
 }
