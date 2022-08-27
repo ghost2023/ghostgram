@@ -12,38 +12,43 @@ import { useAuth } from "../userContext";
 
 export default function Account() {
     const { follows, follow, unFollow } = useAuth()
-    const { userName } = useParams()
+    const { username } = useParams()
     const [userAcc, setUserAcc] = useState()
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
     const [followersNum, setFollowersNum] = useState(0)
-    const [posts, setPost] = useState([])
 
     useEffect(() => {
         // if(!userAcc) return
         setUpProfile()
-        console.log(follows, 'follows')
     },[])
     
     function followUnFollow() {
-        if(!isFollowing) follow(userAcc.uid)
-        else unFollow(userAcc.uid)
-        console.log(1234,follows ,isFollowing)
+        if(!isFollowing){
+            follow(userAcc.username)
+            setFollowersNum(p => p + 1)
+        } 
+        else{
+            unFollow(userAcc.username)
+            setFollowersNum(p => p - 1)
+        }
         setIsFollowing(p => !p)
     }
 
     async function setUpProfile(){
-        const userQuery = query(dbRef(DB, 'users/'), orderByChild('username'), equalTo(userName))
-        const data = await get(userQuery);
-        const uid = Object.keys(data.val())[0]
-        const val = Object.values(data.val())[0]
-        setUserAcc({...val, uid})
-        console.log({...val, uid})
-        getDownloadURL(ref(SG, 'profiles/' + val.profile)).then(url => setProfile(url))
-        const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(uid))
+        const data = await get(dbRef(DB, 'users/' + username));
+        const val = data.val()
+        setUserAcc({...val, username})
+        console.log(data, username)
+
+        // getting profile picture
+        getDownloadURL(ref(SG, 'profiles/' + val.profile)).then(u => setProfile(u))
+
+        // get followers
+        const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(username))
         const followersData = await get(followersQuery)
         setFollowersNum(Object.keys(followersData.val())?.length || 0)
-        setIsFollowing(follows.some(i => i[1] === uid))
+        setIsFollowing(follows.some(i => i[1] === username))
     }
 
   return (
@@ -59,7 +64,7 @@ export default function Account() {
                 <div className={s.detail}>
                     <div className={s['username-wrapper']}>
                         <div className={s.username}>
-                            <h1>{userName}</h1>
+                            <h1>{username}</h1>
                         </div>
                         <div className={s.btns}>
                             <button className={s.msgbtn}>Message</button>
