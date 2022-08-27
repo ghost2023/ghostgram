@@ -1,10 +1,13 @@
 .navbar{
     height: 60px;
     width: 100vw;
+    max-width: 100%;
     border-bottom: 1px solid var(--border-grey);
     background: #fff;
     display: flex;
     justify-content: center;
+    position: sticky;
+    top: 0;
 }
 .container{
     display: flex;
@@ -54,7 +57,7 @@
 }
 .dropdown{
     top: 40px;
-    left: -180px;
+    left: -186px;
     position: absolute;
     background: #fff;
     border-radius: 6px;
