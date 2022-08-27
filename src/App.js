@@ -16,7 +16,7 @@ function App() {
               <PrivateRoute/>
             }/>
             <Route path='/signup' element={<SignUp/>}/>
-            <Route path='/:userName' element={<Account/>}/>
+            <Route path='/:username' element={<Account/>}/>
           </Routes>
         </Load>
       </UserAuthProvider>
