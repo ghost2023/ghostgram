@@ -1,0 +1,151 @@
+.post{
+    display: flex;
+    border: 1px solid var(--border-grey);
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #fff;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.header{
+    height: 56px;
+    display: flex;
+    padding-left: 12px;
+    align-items: center;
+}
+.userpic{
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+    overflow: hidden;
+}
+.userpic img{
+    height: 100%;
+    width: 100%;
+}
+.username{
+    margin-left: 10px;
+    font-weight: 600;
+    flex-grow: 2;
+}
+.header button{
+    border: none;
+    background: none;
+    display: flex;
+    margin-right: 4px;
+    padding: 8px;
+}
+.content{
+    width: 100%;
+}
+.pic{
+    width: 100%;
+    height: 100%;
+    background: var(--grey-100);
+}
+.pic img{
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+.btns{
+    display: flex;
+    padding: 6px 12px;
+    padding-top: 0;
+}
+.btns button{
+    display: flex;
+    background: none;
+    border: none;
+    padding: 8px;
+}
+.btns button:first-child{padding-left: 0;}
+.btns button:last-child{padding-right: 0;}
+.btns button svg:hover{
+    opacity: 0.6;
+}
+.likebtn.liked{
+    fill: rgb(237,73,86);
+    color: rgb(237,73,86);
+}
+.markbtn{
+    margin-left: auto;
+}
+.likecount{
+    font-weight: 700;
+    padding: 0 12px;
+    margin-bottom: 8px;
+}
+.caption{
+    padding: 0 12px;
+    margin-bottom: 8px;
+}
+.caption span{
+    font-weight: 700;
+}
+.more, .viewcomment{
+    color: var(--grey-clr);
+    cursor: pointer;
+}
+.viewcomment{
+    padding-left: 12px;
+    margin-bottom: 8px;
+}
+.comments-prev{
+    padding-left: 12px;
+    margin-bottom: 4px;
+}
+.comments-prev>*{
+    margin-bottom: 4px;
+}
+.comments-prev a{
+    font-weight: 700;
+    color: var(--blck-clr);
+}
+.timestamp{
+    font-weight: 400;
+    color: var(--grey-clr);
+    font-size: 10px;
+    padding-left: 12px;
+    margin-bottom: 12px;
+}
+.commentsection form{
+    align-items: center;
+    display: flex;
+    border-top: 1px solid var(--border-grey);
+    padding: 4px 12px;
+}
+.emojibtn{
+    display: flex;
+    background: none;
+    border: none;
+    padding: 8px 12px 8px 0;
+}
+
+
+.commentsection textarea{
+    max-width: 100%;
+    line-height: 18px;
+    background: none;
+    border: none;
+    display: flex;
+    flex-grow: 1;
+    font-size: inherit;
+    height: 18px;
+    max-height: 80px;
+    outline: none;
+    resize: none;
+    padding: 0;
+}
+.commentsection textarea::placeholder{
+    color: var(--grey-clr);
+}
+.commentsection button{
+    display: flex;
+    font-weight: 600;
+    border: none;
+    background: none;
+    color: var(--lg-blue);
+}
