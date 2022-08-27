@@ -39,6 +39,8 @@ button:disabled{opacity: 0.3;}
     right: 0;
     width: 100vw;
     height: 100vh;
+    max-width: 100%;
+    max-width: 100%;
     align-items: center;
     justify-content: center;
     z-index: 1000;
