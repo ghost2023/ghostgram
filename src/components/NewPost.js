@@ -29,7 +29,9 @@ export default function NewPost({ closeNewPost }) {
     });
     const newPostRef = push(dbRef(DB, 'posts/'))
     set(newPostRef, {
-      user: user.uid,
+      userId: user.uid,
+      userProfile: user.profile,
+      username: user.username,
       caption,
       content: fileNames,
       hideStats,
