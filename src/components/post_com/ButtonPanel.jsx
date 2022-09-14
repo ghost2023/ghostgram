@@ -10,7 +10,7 @@ import Heart from '../svgs/Heart'
 import Kite from '../svgs/Kite'
 import Mark from '../svgs/Mark'
 
-export default function ButtonPanel({ post }) {
+export default function ButtonPanel({ post, viewComments }) {
     const { user, follows } = useAuth()
     const [peopleLikes, setPeopleLikes] = useState([])
     const [likes, setLikes] = useState(0)
@@ -96,7 +96,7 @@ export default function ButtonPanel({ post }) {
   return (<>
     <section className={s.btns}>
       <button className={s.likebtn + (isLiked ? ` ${s.liked}`:'')} onClick={like}><Heart full={isLiked}/></button>
-      <button className={s.commentbtn}><Bubble/></button>
+      <button className={s.commentbtn} onClick={viewComments}><Bubble/></button>
       <button className={s.sharebtn}><Kite/></button>
       <button className={s.markbtn}><Mark/></button>
     </section>
