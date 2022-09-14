@@ -8,13 +8,21 @@
     flex-direction: column;
     margin-top: 16px;
 }
+.post-extended{
+    display: flex;
+    background: #fff;
+    border-radius: 3px;
+    height: min(90vh, 50vw);
+}
 
 .header{
-    height: 56px;
+    height: 60px;
     display: flex;
-    padding-left: 12px;
+    padding: 14px 4px 14px 16px;
     align-items: center;
+    border-bottom: 1px solid var(--border-grey);
 }
+.header a{color: var(--blck-clr);}
 .userpic{
     border-radius: 50%;
     height: 32px;
@@ -26,7 +34,7 @@
     width: 100%;
 }
 .username{
-    margin-left: 10px;
+    margin-left: 14px;
     font-weight: 600;
     flex-grow: 2;
 }
@@ -40,20 +48,36 @@
 .content{
     width: 100%;
 }
-.pic{
+.post-extended .content{
+    width: 60%;
+    background: var(--blck-clr);
+}
+.post .pic{
     width: 100%;
     height: 100%;
     background: var(--grey-100);
 }
+.post-extended .pic{background: #000;}
 .pic img{
     object-fit: contain;
     width: 100%;
     height: 100%;
 }
+.side{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
 .btns{
     display: flex;
     padding: 6px 12px;
     padding-top: 0;
+    border-top: 1px solid var(--border-grey);
+}
+.post-extended .btns{
+    margin-top: 4px;
+    padding-top: 6px;
+    padding-bottom: 8px;
 }
 .btns button{
     display: flex;
@@ -111,7 +135,26 @@
     padding-left: 12px;
     margin-bottom: 12px;
 }
-.commentsection form{
+.commentsection{
+    display: flex;
+    flex-grow: 1;
+    padding: 0 16px;
+    flex-direction: column;
+}
+.comment{
+    display: flex;
+    margin-bottom: 16px;
+    padding-top: 12px;
+}
+.comment .userpic{
+    margin-right: 18px;
+}
+.comment span{
+    font-weight: 600;
+    padding-right: 4px;
+}
+.comment span a{color: var(--blck-clr);}
+.commentform form{
     align-items: center;
     display: flex;
     border-top: 1px solid var(--border-grey);
@@ -124,8 +167,7 @@
     padding: 8px 12px 8px 0;
 }
 
-
-.commentsection textarea{
+.commentform textarea{
     max-width: 100%;
     line-height: 18px;
     background: none;
@@ -139,10 +181,10 @@
     resize: none;
     padding: 0;
 }
-.commentsection textarea::placeholder{
+.commentform textarea::placeholder{
     color: var(--grey-clr);
 }
-.commentsection button{
+.commentform button{
     display: flex;
     font-weight: 600;
     border: none;
