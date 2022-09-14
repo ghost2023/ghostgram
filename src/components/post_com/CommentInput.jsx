@@ -14,12 +14,12 @@ export default function CommentInput({ postId ,updateComments }) {
           .then(() => {
             e.target.querySelector('textarea').value = ''
             setComment('')
-            updateComments(comment)
+            if(updateComments) updateComments(comment)
           })
       }
 
   return (
-    <section className={s.commentsection}>
+    <section className={s.commentform}>
         <form onSubmit={submitComment}>
             <button className={s.emojibtn}>
             <Emoji/>
