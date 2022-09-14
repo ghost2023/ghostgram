@@ -1,22 +1,23 @@
 import { equalTo, get, orderByChild, query, ref as dbRef } from 'firebase/database';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { DB } from '../fb-config';
 import s from '../styles/Post.module.css';
 import { useAuth } from '../userContext';
 import { convertTime } from '../utils';
 import AccountLink from './AccountLink';
 import Media from './Media';
+import PostExtended from './PostExtended';
 import ButtonPanel from './post_com/ButtonPanel';
 import CommentInput from './post_com/CommentInput';
+import Header from './post_com/Header';
 import Slider from './Slider';
-import Options from './svgs/Options';
 
 export default function Post({post}) {
   const { user } = useAuth()
   const [comments, setComments] = useState(0)
   const [timePosted, setTimePosted] = useState('')
   const [userComments, setUserComments] = useState([])
+  const [commentsOpen, setCommentsOpen] = useState(false)
 
   useEffect(() => {
     
@@ -46,17 +47,7 @@ export default function Post({post}) {
 
   return (
     <article className={s.post}>
-      <div className={s.header}>
-        <Link to={`/${post.username}`}>
-          <div className={s.userpic}>
-            <Media path={`profiles/${post.userProfile}`}/>
-          </div>
-        </Link>
-        <div className={s.username}>
-          <AccountLink username={post.username} />
-        </div>
-        <button><Options isSmall/></button>
-      </div>
+      <Header userProfile={post.userProfile} username={post.username}/>
       <div className={s.content}>
         {post.content.length === 1 ? 
         <div className={s.pic}>{<Media path={post.content[0]}/>}</div>
@@ -67,7 +58,7 @@ export default function Post({post}) {
         }
       </div>
 
-      <ButtonPanel post={post}/>
+      <ButtonPanel post={post} viewComments={() => setCommentsOpen(true)}/>
 
       {!post.caption.length ||
         <section className={s.caption}><span>{post.username}</span> {post.caption}</section>}
@@ -83,6 +74,8 @@ export default function Post({post}) {
       }
       <div className={s.timestamp}>{timePosted}</div>
       <CommentInput postId={post.id} {...{updateComments}}/>
+      {!commentsOpen || 
+      <PostExtended {...{post}} {...{timePosted}} setOpen={setCommentsOpen}/>}
     </article>
   )
 }
