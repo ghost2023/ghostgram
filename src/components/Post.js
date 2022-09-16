@@ -18,6 +18,7 @@ export default function Post({post}) {
   const [timePosted, setTimePosted] = useState('')
   const [userComments, setUserComments] = useState([])
   const [commentsOpen, setCommentsOpen] = useState(false)
+  const [content, setContent] = useState(<></>)
 
   useEffect(() => {
     
@@ -41,6 +42,15 @@ export default function Post({post}) {
           )
         })
     }
+
+    if(post.content.length === 1) setContent(
+        <div className={s.pic}>{<Media path={post.content[0]}/>}</div>
+      )
+    else setContent(
+      <Slider isInPost>
+        {post.content.map(i => <div key={i} className={s.pic}><Media path={i}/></div> )}
+      </Slider>
+    )
   },[])
 
   const updateComments = (comment) => setUserComments(p => [ ...p, comment ])
@@ -49,13 +59,7 @@ export default function Post({post}) {
     <article className={s.post}>
       <Header userProfile={post.userProfile} username={post.username}/>
       <div className={s.content}>
-        {post.content.length === 1 ? 
-        <div className={s.pic}>{<Media path={post.content[0]}/>}</div>
-        :
-        <Slider isInPost>
-          {post.content.map(i => <div key={i} className={s.pic}><Media path={i}/></div> )}
-        </Slider>
-        }
+        {content}
       </div>
 
       <ButtonPanel post={post} viewComments={() => setCommentsOpen(true)}/>
@@ -75,7 +79,7 @@ export default function Post({post}) {
       <div className={s.timestamp}>{timePosted}</div>
       <CommentInput postId={post.id} {...{updateComments}}/>
       {!commentsOpen || 
-      <PostExtended {...{post}} {...{timePosted}} setOpen={setCommentsOpen}/>}
+      <PostExtended {...{post}} {...{timePosted}} setOpen={setCommentsOpen} {...{content}}/>}
     </article>
   )
 }
