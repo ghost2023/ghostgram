@@ -13,6 +13,7 @@
     background: #fff;
     border-radius: 3px;
     height: min(90vh, 50vw);
+    margin: 0 64px;
 }
 
 .header{
