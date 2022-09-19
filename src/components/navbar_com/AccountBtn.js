@@ -6,12 +6,12 @@ import Mark from '../svgs/Mark'
 import Profile from '../svgs/Profile'
 
 export default function AccountBtn({ isDBOpen, openDB }) {
-  const { user, logOut } = useAuth()
+  const { user, logOut, profileUrl } = useAuth()
 
   return (
     <div className={s.account + (isDBOpen ? ' ' + s.foc: '')}>
             <div className={s.icon} onClick={openDB}>
-              <img src={user?.profileURL} alt="" />
+              <img src={profileUrl} alt="" />
             </div>
             <div className={s.dropdown}>
               <Link to={"/" + user?.username}>
