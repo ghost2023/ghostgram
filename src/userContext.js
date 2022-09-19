@@ -14,6 +14,7 @@ export default function UserAuthProvider({ children }) {
     const [user, setUser] = useState();
     const [follows, setFollows] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [profileUrl, setProfileUrl] = useState('')
     
     function login(email, password) {
       return signInWithEmailAndPassword(auth, email, password);
@@ -64,36 +65,36 @@ export default function UserAuthProvider({ children }) {
 
     useEffect(() => {
         // watch for any user changes
-        const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentuser) => {
           if (!currentuser){
             setLoading(false)
             return console.log('no user')
           }
           const userQuery  = query(dbRef(DB, `users/`), orderByChild('uid'), equalTo(currentuser.uid))
-          get(userQuery).then(d => {
-            const username = Object.keys(d.val())[0]
+          const u = await get(userQuery)
+          const username = Object.keys(u.val())[0]
 
-            const userObj = {
-              ...currentuser,
-              username,
-              ...Object.values(d.val())[0]
-            }
-            console.log("Auth", username);
+          const userObj = {
+            ...currentuser,
+            username,
+            ...Object.values(u.val())[0]
+          }
+          console.log("Auth", username);
+          setUser(userObj)
 
-
-            // get and store profile image Url
-            updateFollow(username).then(() => setLoading(false))
-                        
-            getDownloadURL(ref(SG, `profiles/${userObj.profile}`))
-              .then(u => setUser({...userObj, profileURL: u}))
-          })
+          // get and store profile image Url
+          await updateFollow(username)
+                      
+          const url = await getDownloadURL(ref(SG, `profiles/${userObj.profile}`)) 
+          setProfileUrl(url)
+          setLoading(false)
         });
         
         return () => unsubscribe();
       }, []);
 
 
-  return (<userContext.Provider value={{ user, isLoading, follows, login, signUp, logOut, follow, unFollow }}>
+  return (<userContext.Provider value={{ user, isLoading, follows, login, signUp, logOut, follow, unFollow, profileUrl }}>
       {children}
     </userContext.Provider>)
 }
