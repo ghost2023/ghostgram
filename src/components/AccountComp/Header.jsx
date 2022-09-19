@@ -1,24 +1,35 @@
 import { equalTo, get, orderByChild, query, ref as dbRef } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
 import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import Chevron from "../../components/svgs/Chevron";
 import Following from "../../components/svgs/Following";
 import Options from "../../components/svgs/Options";
 import { DB, SG } from "../../fb-config";
 import s from '../../styles/Account.module.css';
 import { useAuth } from "../../userContext";
+import Gear from "../svgs/Gear";
 
 export default function Header({ username }) {
-    const { follows, follow, unFollow } = useAuth()
+    const { follows, follow, unFollow, user, profileUrl} = useAuth()
     const [userAcc, setUserAcc] = useState()
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
     const [followersNum, setFollowersNum] = useState(0)
+    const Btns = {
+        MessageBtn : <button className={s.msgbtn}>Message</button>,
+        FollowBtn : <button className={`${s.followbtn} ${!isFollowing && s.b }`} onClick={followUnFollow}>
+            {isFollowing? <Following/> : "Follow"}
+        </button>,
+        SuggestionBtn : <button className={`${s.suggestbtn} ${!isFollowing && s.b }`}>
+            <Chevron isSmall dxn='d'/>
+        </button>,
+        EditBtn : <Link to="accounts/edit/"><button>Edit profile</button></Link>
+}
 
-    
     useEffect(() => {
         setUpProfile()
-    },[])
+    },[username])
 
     function followUnFollow() {
         if(!isFollowing){
@@ -33,10 +44,15 @@ export default function Header({ username }) {
     }
 
     async function setUpProfile(){
+        if(username === user.username){
+            setUserAcc(user)
+            console.log(user)
+            setProfile(profileUrl)
+            return
+        }
         const data = await get(dbRef(DB, 'users/' + username));
         const val = data.val()
         setUserAcc({...val, username})
-        console.log(data, username)
 
         // getting profile picture
         getDownloadURL(ref(SG, 'profiles/' + val.profile)).then(u => setProfile(u))
@@ -45,7 +61,10 @@ export default function Header({ username }) {
         const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(username))
         const followersData = await get(followersQuery)
         setFollowersNum(Object.keys(followersData.val())?.length || 0)
+
+        // set where the logged in user is following this user
         setIsFollowing(follows.some(i => i[1] === username))
+
     }
 
   return (
@@ -61,11 +80,22 @@ export default function Header({ username }) {
                     <h1>{username}</h1>
                 </div>
                 <div className={s.btns}>
-                    <button className={s.msgbtn}>Message</button>
-                    <button className={`${s.followbtn} ${!isFollowing && s.b }`} onClick={followUnFollow}>{isFollowing? <Following/> : "Follow"}</button>
-                    <button className={`${s.suggestbtn} ${!isFollowing && s.b }`}><Chevron isSmall dxn='d'/></button>
+                    {username !== user.username? 
+                        <>
+                            {Btns.MessageBtn}
+                            {Btns.FollowBtn}
+                            {Btns.SuggestionBtn}
+                        </>:
+                        <>
+                            {Btns.EditBtn}
+                        </>
+                    }
+                    
                 </div>
-                <button className={s.optionsbtn}><Options/></button>
+                {username !== user.username ?
+                <button className={s.optionsbtn}><Options/></button>:
+                <button className={s.optionsbtn}><Gear/></button>
+                }
             </div>
             <div className={s.stats}>
                 <div className={s.posts}><span>{userAcc?.posts || 0}</span> posts</div>
@@ -73,7 +103,11 @@ export default function Header({ username }) {
                 <div className={s.following}><span>{userAcc?.followings || 0}</span> following</div>
             </div>
             <div className={s.info}>
-
+                <div className={s.name}>{userAcc?.name}</div>
+                {!!userAcc?.occupation?.length && 
+                <div className={s.occ}>{userAcc?.occupation}</div>}
+                {!!userAcc?.bio?.length &&
+                <div className={s.bio}>{userAcc?.bio}</div>}
             </div>
         </div>
     </main>
