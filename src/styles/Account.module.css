@@ -70,13 +70,18 @@ button.followbtn{
 .stats{
     display: flex;
     font-size: 16px;
+    margin-bottom: 20px;
 }
 .stats span{
     font-weight: 600;
 }
-.posts, .followers{
-    margin-right: 40px;
+.info{
+    font-size: 16px;
+    line-height: 24px;
 }
+.name{font-weight: 600;}
+.occ{color: var(--grey-clr);}
+.posts, .followers{margin-right: 40px;}
 button.b{
     border: none;
     color: #fff;
@@ -126,6 +131,7 @@ button.b{
     margin: 60px 44px;
     margin-bottom: 0;
 }
+
 .cameraicon{
     border-radius: 50%;
     display: flex;
@@ -138,8 +144,21 @@ button.b{
 .noposts h1{
     font-size: 28px;
     font-weight: 300;
-    padding-top: 32px;
-    padding-bottom: 48px;
+    margin-top: 32px;
+    margin-bottom: 48px;
+}
+.noposts h1.self{
+    margin: 24px 0;
+    line-height: 18px;
+}
+.noposts p {
+    margin-bottom: 24px;
+}
+.noposts button{
+    border: none;
+    background: none;
+    color: var(--lg-blue);
+    font-weight: 600;
 }
 .post{
     aspect-ratio: 1;
