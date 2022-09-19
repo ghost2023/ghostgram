@@ -1,12 +1,15 @@
 .slider{
     position: relative;
+    height: 100%;
 }
 .hider{
     overflow: hidden;
+    height: 100%;
 }
 .container{
     display: flex;
     overflow: hidden;
+    max-height: 100%;
 }
 .slide{
     display: flex;
