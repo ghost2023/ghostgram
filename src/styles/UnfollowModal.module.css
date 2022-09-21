@@ -1,0 +1,54 @@
+.modal{
+    margin: 20px;
+    width: 400px;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.profile{
+    margin: 16px;
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+}
+.profile img{
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+}
+.username{
+    display: flex;
+    justify-content: center;
+    margin: 16px 32px;
+}
+.btns{
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+.btns button{
+    min-height: 48px;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    vertical-align: middle;
+    width: 100%;
+    line-height: 21px;
+    border-top: 1px solid var(--border-grey);
+}
+.btns button::active{
+    background-color: rgba(0, 0, 0, .1);
+    opacity: 1;
+}
+.unfollow{
+    font-weight: 700;
+    color: var(--warning);
+}
+
+@media (max-width: 735px){
+    .modal{
+        width: 260px;
+    }
+}
