@@ -102,6 +102,7 @@
     font-weight: 700;
     padding: 0 12px;
     margin-bottom: 8px;
+    cursor: pointer;
 }
 .caption{
     padding: 0 12px;
