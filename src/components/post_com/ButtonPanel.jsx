@@ -25,7 +25,7 @@ export default function ButtonPanel({ post, viewComments }) {
           if(!likeCount) return
 
           setLikes(likeCount)
-          const liked = (await get(ref(DB, `likes/${post.id}/${user.uid}`))).val()
+          const liked = (await get(ref(DB, `likes/${post.id}/${user.username}`))).val()
           
           if(liked) setLiked(true)
 
@@ -81,9 +81,9 @@ export default function ButtonPanel({ post, viewComments }) {
       }
     }, [likes, peopleLikes])
 
-    function like(){
+    function likeUnLike(){
         if(isLiked){
-          disLikePost(post.id, user.uid).then(() => {
+          disLikePost(post.id, user.username).then(() => {
             setLiked(false)
             setLikes(p => p - 1)
           })
@@ -97,7 +97,7 @@ export default function ButtonPanel({ post, viewComments }) {
     
   return (<>
     <section className={s.btns}>
-      <button className={s.likebtn + (isLiked ? ` ${s.liked}`:'')} onClick={like}><Heart full={isLiked}/></button>
+      <button className={s.likebtn + (isLiked ? ` ${s.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
       <button className={s.commentbtn} onClick={viewComments}><Bubble/></button>
       <button className={s.sharebtn}><Kite/></button>
       <button className={s.markbtn}><Mark/></button>
