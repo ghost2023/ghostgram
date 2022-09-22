@@ -14,7 +14,6 @@ export default function LikesModal({ PostId, closeModal }) {
         if(!snapShot.val()) return
         const snapShotData = snapShot.val()
         delete snapShotData.count
-        console.log(snapShotData)
         const likesArr = Object.values(snapShotData)
         setLikes(likesArr)
       })
