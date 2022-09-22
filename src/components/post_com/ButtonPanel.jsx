@@ -9,6 +9,7 @@ import Bubble from '../svgs/Bubble'
 import Heart from '../svgs/Heart'
 import Kite from '../svgs/Kite'
 import Mark from '../svgs/Mark'
+import LikesModal from './LikesModal'
 
 export default function ButtonPanel({ post, viewComments }) {
     const { user, follows } = useAuth()
@@ -16,6 +17,7 @@ export default function ButtonPanel({ post, viewComments }) {
     const [likes, setLikes] = useState(0)
     const [isLiked, setLiked] = useState(false)
     const [LikeView, setLikeView] = useState(<></>)
+    const [likeModalOpen, setLikeModalOpen] = useState(false)
 
     useEffect(() => {
       (async() => {
@@ -100,6 +102,7 @@ export default function ButtonPanel({ post, viewComments }) {
       <button className={s.sharebtn}><Kite/></button>
       <button className={s.markbtn}><Mark/></button>
     </section>
-    {!likes || <div className={s.likecount}>{LikeView}</div>}
+    {!likes || <div className={s.likecount} onClick={() => setLikeModalOpen(true)}>{LikeView}</div>}
+    {likeModalOpen && <LikesModal PostId={post.id} closeModal={() => setLikeModalOpen(false)}/>}
   </>)
 }
