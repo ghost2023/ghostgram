@@ -1,0 +1,81 @@
+.modal{
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border-grey);
+    margin: 20px;
+    width: 400px;
+    max-height: calc(100% - 40px);
+    overflow: hidden;
+}
+.modal-header{
+    height: 42px;
+    width: 100%;
+    border-bottom: 1px solid var(--border-grey);
+    display: flex;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+}
+.modal-header h1{
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+    flex-grow: 1;
+    justify-content: center;
+}
+.close-btn{
+    position: absolute;
+    right: 0;
+    padding: 8px 16px;
+    display: flex;
+    border: none;
+    background: none;
+    justify-self: end;
+}
+.modal-body{
+    min-height: 200px;
+}
+.account{
+    display: flex;
+    width: 100%;
+    padding: 8px 16px;
+    align-items: center;
+}
+.icon{
+    margin-right: 12px;
+    border-radius: 50%;
+    height: 44px;
+    width: 44px;
+    object-fit: cover;
+    overflow: hidden;
+}
+.icon img{
+    height: 100%;
+    width: 100%;
+}
+.account-name{
+    flex-grow: 1;
+}
+.account-name a{
+    color: var(--blck-clr);
+    font-weight: 600;
+}
+.account-name span{
+    color: var(--grey-clr);
+    display: block;
+}
+
+.account>button{
+    border: 1px solid var(--lg-blue);
+    background: var(--lg-blue);
+    font-weight: 600;
+    color: #fff;
+    border-radius: 4px;
+    padding: 5px 13px;
+    margin-left: 8px;
+}
+.account button.unfollow-btn{
+    color: var(--blck-clr);
+    background: none;
+    border-color: var(--border-grey);
+}
