@@ -40,7 +40,8 @@ export async function likePost(postId, user){
     await set(likeref, {
         username : user.username,
         profile : user.profile,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        name: user.name
     })
     const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
     await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount + 1)
