@@ -57,7 +57,7 @@ export default function Post({post}) {
 
   return (
     <article className={s.post}>
-      <Header userProfile={post.userProfile} username={post.username}/>
+      <Header postId={post.id} userProfile={post.userProfile} username={post.username}/>
       <div className={s.content}>
         {content}
       </div>
