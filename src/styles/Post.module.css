@@ -99,10 +99,15 @@
     margin-left: auto;
 }
 .likecount{
-    font-weight: 700;
     padding: 0 12px;
     margin-bottom: 8px;
     cursor: pointer;
+}
+.likecount a, .likecount span{
+    font-weight: 700;
+}
+.likecount a{
+    color: var(--blck-clr);
 }
 .caption{
     padding: 0 12px;
