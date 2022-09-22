@@ -8,21 +8,27 @@ import AccountLink from './AccountLink'
 import Media from './Media'
 import UnfollowModal from './UnfollowModal'
 
-export default function MiniProfile({ username }) {
+export default function MiniProfile({ username, userData }) {
     const { follows, follow, user } = useAuth()
     const [userProfile, setProfile] = useState()
     const [modal, setModal] = useState(false)
     const [isFollow, setFollow] = useState(false)
 
     useState(() => {
-        if(!username) return
+        if(!username && !userData) return
         if(username === user.userProfile){
             setProfile(user)
         }
-        get(ref(DB, `users/${username}/`)).then(snapShot => {
-            setProfile(snapShot.val())
-        })
-        setFollow(follows.some(item => item.user === username))
+        else if(userData){
+            setProfile(userData)
+            setFollow(follows.some(item => item.user === username))
+        }
+        else{
+            get(ref(DB, `users/${username}/`)).then(snapShot => {
+                setProfile(snapShot.val())
+            })
+            setFollow(follows.some(item => item.user === username))
+        }
     }, [username])
 
     if(!userProfile) return null
@@ -36,7 +42,7 @@ export default function MiniProfile({ username }) {
         <div className={s["account-name"]}>
             <AccountLink {...{username}} />
             <span>
-                {userProfile?.name}
+                {userProfile.name}
             </span>
         </div>
         {username === user.username?
