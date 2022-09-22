@@ -28,8 +28,8 @@ export default function ButtonPanel({ post, viewComments }) {
           if(liked) setLiked(true)
 
           const peopleLiked = []
-          for(const [_, f] of follows){
-              const likeRef = ref(DB, `likes/${post.id}/${f}`)
+          for(const follow of follows){
+              const likeRef = ref(DB, `likes/${post.id}/${follow.user}`)
               const likeData = await get(likeRef)
               if(likeData.val()) {
                   peopleLiked.push(likeData.val())
