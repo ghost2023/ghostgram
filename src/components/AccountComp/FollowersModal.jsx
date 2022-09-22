@@ -1,7 +1,7 @@
-import s from '../../styles/FollowModal.module.css'
+import s from '../../styles/Modal.module.css'
+import MiniProfile from '../MiniProfile'
 import Overlay from '../Overlay'
 import Cross from '../svgs/Cross'
-import MiniProfile from './MiniProfile'
 
 export default function FollowersModal({ closeModal, followers = [] }) {
 

@@ -1,10 +1,10 @@
 import { equalTo, get, orderByChild, query, ref } from 'firebase/database'
 import { useEffect, useState } from 'react'
 import { DB } from '../../fb-config'
-import s from '../../styles/FollowModal.module.css'
+import s from '../../styles/Modal.module.css'
+import MiniProfile from '../MiniProfile'
 import Overlay from '../Overlay'
 import Cross from '../svgs/Cross'
-import MiniProfile from './MiniProfile'
 
 export default function FollowingModal({ username, closeModal }) {
   const [following, setFollowing] = useState([])

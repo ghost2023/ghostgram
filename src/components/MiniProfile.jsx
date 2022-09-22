@@ -1,12 +1,12 @@
 import { get, ref } from 'firebase/database'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DB } from '../../fb-config'
-import s from '../../styles/FollowModal.module.css'
-import { useAuth } from '../../userContext'
-import AccountLink from '../AccountLink'
-import Media from '../Media'
-import UnfollowModal from '../UnfollowModal'
+import { DB } from '../fb-config'
+import s from '../styles/MiniProfile.module.css'
+import { useAuth } from '../userContext'
+import AccountLink from './AccountLink'
+import Media from './Media'
+import UnfollowModal from './UnfollowModal'
 
 export default function MiniProfile({ username }) {
     const { follows, follow, user } = useAuth()
