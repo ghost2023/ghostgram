@@ -10,19 +10,22 @@ import UnfollowModal from './UnfollowModal'
 
 export default function MiniProfile({ username }) {
     const { follows, follow, user } = useAuth()
-    const [userProfile, setUser] = useState()
+    const [userProfile, setProfile] = useState()
     const [modal, setModal] = useState(false)
     const [isFollow, setFollow] = useState(false)
 
     useState(() => {
         if(!username) return
+        if(username === user.userProfile){
+            setProfile(user)
+        }
         get(ref(DB, `users/${username}/`)).then(snapShot => {
-            setUser(snapShot.val())
+            setProfile(snapShot.val())
         })
         setFollow(follows.some(item => item.user === username))
     }, [username])
 
-    if(!userProfile || username === user.username) return null
+    if(!userProfile) return null
   return (
     <div className={s.account}>
         <Link to={`/${username}`}>
@@ -36,12 +39,17 @@ export default function MiniProfile({ username }) {
                 {userProfile?.name}
             </span>
         </div>
-        {isFollow? 
-            <button onClick={() => setModal(true)} className={s['unfollow-btn']}>Following</button>:
-            <button onClick={() => {follow(username); setFollow(true)}}>Follow</button>
+        {username === user.username?
+           <></>: 
+            <>
+                {isFollow? 
+                    <button onClick={() => setModal(true)} className={s['unfollow-btn']}>Following</button>:
+                    <button onClick={() => {follow(username); setFollow(true)}}>Follow</button>
+                }
+                {!modal ||
+                    <UnfollowModal {...{username}} onUnfollow={() => setFollow(false)} closeModal={() => setModal(false)}/>}
+            </>
         }
-        {!modal ||
-        <UnfollowModal {...{username}} onUnfollow={() => setFollow(false)} closeModal={() => setModal(false)}/>}
     </div>
   )
 }
