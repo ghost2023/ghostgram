@@ -6,16 +6,22 @@ import Chevron from "../../components/svgs/Chevron";
 import Following from "../../components/svgs/Following";
 import Options from "../../components/svgs/Options";
 import { DB, SG } from "../../fb-config";
-import s from '../../styles/Account.module.css';
+import s from '../../styles/AccountHeader.module.css';
 import { useAuth } from "../../userContext";
 import Gear from "../svgs/Gear";
+import UnfollowModal from "../UnfollowModal";
+import Followers from "./FollowersModal";
+import FollowingModal from "./FollowingModal";
 
 export default function Header({ username }) {
-    const { follows, follow, unFollow, user, profileUrl} = useAuth()
+    const { follows, follow, user, profileUrl} = useAuth()
     const [userAcc, setUserAcc] = useState()
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
-    const [followersNum, setFollowersNum] = useState(0)
+    const [followers, setFollowers] = useState([])
+    const [followersModal, setFollowersModal] = useState(false)
+    const [followingModal, setFollowingModal] = useState(false)
+    const [unFollowModal, setUnFollowModal] = useState(false)
     const Btns = {
         MessageBtn : <button className={s.msgbtn}>Message</button>,
         FollowBtn : <button className={`${s.followbtn} ${!isFollowing && s.b }`} onClick={followUnFollow}>
@@ -34,19 +40,16 @@ export default function Header({ username }) {
     function followUnFollow() {
         if(!isFollowing){
             follow(userAcc.username)
-            setFollowersNum(p => p + 1)
+            setIsFollowing(true)
         } 
         else{
-            unFollow(userAcc.username)
-            setFollowersNum(p => p - 1)
+            setUnFollowModal(true)
         }
-        setIsFollowing(p => !p)
     }
 
     async function setUpProfile(){
         if(username === user.username){
             setUserAcc(user)
-            console.log(user)
             setProfile(profileUrl)
             return
         }
@@ -60,10 +63,11 @@ export default function Header({ username }) {
         // get followers
         const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(username))
         const followersData = await get(followersQuery)
-        setFollowersNum(Object.keys(followersData.val())?.length || 0)
+        const followersArr = Object.values(followersData.val()).map(item => item.follower)
+        setFollowers(followersArr)
 
         // set where the logged in user is following this user
-        setIsFollowing(follows.some(i => i[1] === username))
+        setIsFollowing(follows.some(i => i.user === username))
 
     }
 
@@ -99,8 +103,8 @@ export default function Header({ username }) {
             </div>
             <div className={s.stats}>
                 <div className={s.posts}><span>{userAcc?.posts || 0}</span> posts</div>
-                <div className={s.followers}><span>{followersNum}</span> followers</div>
-                <div className={s.following}><span>{userAcc?.followings || 0}</span> following</div>
+                <div className={s.followers} onClick={() => setFollowersModal(true)}><span>{followers.length}</span> followers</div>
+                <div className={s.following} onClick={() => setFollowingModal(true)}><span>{userAcc?.followings || 0}</span> following</div>
             </div>
             <div className={s.info}>
                 <div className={s.name}>{userAcc?.name}</div>
@@ -110,6 +114,12 @@ export default function Header({ username }) {
                 <div className={s.bio}>{userAcc?.bio}</div>}
             </div>
         </div>
+        {!followersModal || 
+        <Followers {...{username}} {...{followers}} closeModal={() => setFollowersModal(false)} />}
+        {!followingModal || 
+        <FollowingModal {...{username}} closeModal={() => setFollowingModal(false)} />}
+        {!unFollowModal ||
+        <UnfollowModal {...{username}} onUnfollow={() => setIsFollowing(false)} closeModal={() => setUnFollowModal(false)}/>}
     </main>
   )
 }
