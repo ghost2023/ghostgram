@@ -1,3 +1,4 @@
+import UserAuthProvider, { useAuth } from "context/userContext";
 import Account from 'pages/Account';
 import Home from 'pages/Home';
 import Loading from 'pages/Loading';
@@ -5,7 +6,6 @@ import Login from 'pages/Login';
 import Post from 'pages/Post';
 import SignUp from 'pages/SignUp';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import UserAuthProvider, { useAuth } from "./userContext";
 
 function App() {
   return (
