@@ -1,9 +1,10 @@
+import Account from 'pages/Account';
+import Home from 'pages/Home';
+import Loading from 'pages/Loading';
+import Login from 'pages/Login';
+import Post from 'pages/Post';
+import SignUp from 'pages/SignUp';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Account from './pages/Account';
-import Home from './pages/Home';
-import Loading from './pages/Loading';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
 import UserAuthProvider, { useAuth } from "./userContext";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             }/>
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/:username' element={<Account/>}/>
+            <Route path="/p/:postId" element={<Post/>}/>
           </Routes>
         </Load>
       </UserAuthProvider>
