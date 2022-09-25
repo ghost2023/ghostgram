@@ -47,6 +47,6 @@ button:disabled{opacity: 0.3;}
     justify-content: center;
     z-index: 1000;
 }
-.overlay>div{
+.overlay>div:not(.overlay){
     margin: 20px;
 }
