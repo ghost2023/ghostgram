@@ -1,15 +1,16 @@
+import AccountLink from 'components/AccountLink'
+import { useAuth } from 'context/userContext'
+import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
 import { useEffect, useState } from 'react'
-import { DB } from '../../fb-config'
-import s from '../../styles/Post.module.css'
-import { useAuth } from '../../userContext'
-import { disLikePost, likePost } from '../../utils'
-import AccountLink from '../AccountLink'
-import Bubble from '../svgs/Bubble'
-import Heart from '../svgs/Heart'
-import Kite from '../svgs/Kite'
-import Mark from '../svgs/Mark'
+import style from 'styles/Post.module.css'
+import Bubble from 'svgs/Bubble'
+import Heart from 'svgs/Heart'
+import Kite from 'svgs/Kite'
+import Mark from 'svgs/Mark'
+import { disLikePost, likePost } from 'utils/services'
 import LikesModal from './LikesModal'
+
 
 export default function ButtonPanel({ post, viewComments }) {
     const { user, follows } = useAuth()
@@ -96,13 +97,13 @@ export default function ButtonPanel({ post, viewComments }) {
       }
     
   return (<>
-    <section className={s.btns}>
-      <button className={s.likebtn + (isLiked ? ` ${s.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
-      <button className={s.commentbtn} onClick={viewComments}><Bubble/></button>
-      <button className={s.sharebtn}><Kite/></button>
-      <button className={s.markbtn}><Mark/></button>
+    <section className={style.btns}>
+      <button className={style.likebtn + (isLiked ? ` ${style.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
+      <button className={style.commentbtn} onClick={viewComments}><Bubble/></button>
+      <button className={style.sharebtn}><Kite/></button>
+      <button className={style.markbtn}><Mark/></button>
     </section>
-    {!likes || <div className={s.likecount} onClick={() => setLikeModalOpen(true)}>{LikeView}</div>}
+    {!likes || <div className={style.likecount} onClick={() => setLikeModalOpen(true)}>{LikeView}</div>}
     {likeModalOpen && <LikesModal PostId={post.id} closeModal={() => setLikeModalOpen(false)}/>}
   </>)
 }

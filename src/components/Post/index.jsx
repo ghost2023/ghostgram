@@ -1,16 +1,17 @@
+import AccountLink from 'components/AccountLink';
+import Media from 'components/Media';
+import PostModal from 'components/Modals/PostModal';
+import Overlay from 'components/Overlay';
+import Slider from 'components/Slider';
+import { useAuth } from 'context/userContext';
+import { DB } from 'fb-config';
 import { equalTo, get, orderByChild, query, ref as dbRef } from 'firebase/database';
 import { useEffect, useState } from 'react';
-import { DB } from '../fb-config';
-import s from '../styles/Post.module.css';
-import { useAuth } from '../userContext';
-import { convertTime } from '../utils';
-import AccountLink from './AccountLink';
-import Media from './Media';
-import PostExtended from './PostExtended';
-import ButtonPanel from './post_com/ButtonPanel';
-import CommentInput from './post_com/CommentInput';
-import Header from './post_com/Header';
-import Slider from './Slider';
+import s from 'styles/Post.module.css';
+import { formatPostTime } from 'utils/formatTime';
+import ButtonPanel from './ButtonPanel';
+import CommentForm from './CommentForm';
+import Header from './Header';
 
 export default function Post({post}) {
   const { user } = useAuth()
@@ -22,7 +23,7 @@ export default function Post({post}) {
 
   useEffect(() => {
     
-    setTimePosted(convertTime(post.timeStamp))
+    setTimePosted(formatPostTime(post.timeStamp))
 
     if(!post.noComment){
       // get number of comments
@@ -77,9 +78,12 @@ export default function Post({post}) {
         </div>
       }
       <div className={s.timestamp}>{timePosted}</div>
-      <CommentInput postId={post.id} {...{updateComments}}/>
+      <CommentForm postId={post.id} {...{updateComments}}/>
       {!commentsOpen || 
-      <PostExtended {...{post}} {...{timePosted}} setOpen={setCommentsOpen} {...{content}}/>}
+      <Overlay onClick={() => setCommentsOpen(true)}>
+
+        <PostModal {...{post, timePosted, content}}/>
+      </Overlay>}
     </article>
   )
 }

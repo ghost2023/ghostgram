@@ -1,10 +1,10 @@
+import MiniProfile from 'components/MiniProfile/'
+import Overlay from 'components/Overlay'
+import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
 import { useEffect, useState } from 'react'
-import { DB } from '../../fb-config'
-import s from '../../styles/Modal.module.css'
-import MiniProfile from '../MiniProfile'
-import Overlay from '../Overlay'
-import Cross from '../svgs/Cross'
+import s from 'styles/Modal.module.css'
+import Cross from 'svgs/Cross'
 
 export default function LikesModal({ PostId, closeModal }) {
     const [likes, setLikes] = useState([])

@@ -1,10 +1,10 @@
+import { useAuth } from 'context/userContext';
 import { useState } from 'react';
-import s from '../../styles/Post.module.css';
-import { useAuth } from '../../userContext';
-import { commentPost } from '../../utils';
-import Emoji from '../svgs/Emoji';
+import s from 'styles/Post.module.css';
+import Emoji from 'svgs/Emoji';
+import { commentPost } from 'utils/services';
 
-export default function CommentInput({ postId ,updateComments }) {
+export default function CommentForm({ postId ,updateComments }) {
     const [comment, setComment] = useState('')
     const { user } = useAuth()
 
