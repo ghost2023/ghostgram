@@ -1,15 +1,14 @@
-import s from '../styles/Login.SignUp.module.css'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { login } from 'utils/services'
 import bannerImg from '../assets/banner.png'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import { useAuth } from '../userContext'
+import s from '../styles/Login.SignUp.module.css'
 
 export default function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { login } = useAuth()
 
   function loginSub(e){
     e.preventDefault()

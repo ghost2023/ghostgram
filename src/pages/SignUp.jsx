@@ -1,8 +1,8 @@
-import s from '../styles/Login.SignUp.module.css'
-import img from '../assets/logo.png';
-import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
-import { useAuth } from '../userContext'
+import { Link, useNavigate } from 'react-router-dom';
+import { signUp } from 'utils/services';
+import img from '../assets/logo.png';
+import s from '../styles/Login.SignUp.module.css';
 
 export default function SignUp() {
 
@@ -11,7 +11,6 @@ export default function SignUp() {
     const [userName, setUserName] = useState('')
     const [pw, setPW] = useState('')
     const nav = useNavigate()
-    const { signUp } = useAuth()
 
     function submitForm(e){
       e.preventDefault()

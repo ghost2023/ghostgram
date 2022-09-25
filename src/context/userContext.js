@@ -1,8 +1,8 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set, update } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, DB, SG } from './fb-config';
+import { auth, DB, SG } from '../fb-config';
 
 const userContext = createContext()
 
@@ -16,26 +16,6 @@ export default function UserAuthProvider({ children }) {
     const [isLoading, setLoading] = useState(true);
     const [profileUrl, setProfileUrl] = useState('')
     
-    function login(email, password) {
-      return signInWithEmailAndPassword(auth, email, password);
-    }
-    async function signUp(name, username, email, password) {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      set(dbRef(DB, 'users/' + username), {
-        name,
-        email,
-        uid : userCredential.user.uid,
-        profile: 'default-avatar.jpg',
-        occupation: '',
-        bio: '',
-        followings: 0,
-        posts: 0,
-        isVerified: false,
-      })
-    }
-    function logOut() {
-      return signOut(auth);
-    }
     async function follow(username){
       if(follows.some(i => i.user === username)) return
       const followRef = push(dbRef(DB, 'follows/'))
@@ -50,6 +30,7 @@ export default function UserAuthProvider({ children }) {
         return { ...prev, followings: newFollowingCount}
       })
     }
+    
     async function unFollow(username){
       const followOb = follows.find(i => i.user === username) 
       if(!followOb) return
@@ -107,7 +88,7 @@ export default function UserAuthProvider({ children }) {
       }, []);
 
 
-  return (<userContext.Provider value={{ user, isLoading, follows, login, signUp, logOut, follow, unFollow, profileUrl }}>
+  return (<userContext.Provider value={{ user, isLoading, follows, follow, unFollow, profileUrl }}>
       {children}
     </userContext.Provider>)
 }
