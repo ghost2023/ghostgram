@@ -53,7 +53,8 @@
     flex-direction: column;
     margin-top: 16px;
 }
-.btns button{
+.btn{
+    color: var(--blck-clr);
     min-height: 48px;
     padding: 4px 8px;
     background: none;
@@ -63,13 +64,20 @@
     line-height: 21px;
     border-top: 1px solid var(--border-grey);
 }
-.btns button::active{
+.btn::active{
     background-color: rgba(0, 0, 0, .1);
     opacity: 1;
 }
-.unfollow{
+.warning{
     font-weight: 700;
     color: var(--warning);
+}
+.options{
+    display: flex;
+    flex-direction: column;
+}
+.options>.btn:first-child{
+    border-top: none;
 }
 
 @media (max-width: 735px){
