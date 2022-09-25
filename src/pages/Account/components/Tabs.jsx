@@ -1,7 +1,6 @@
-import React from 'react'
-import s from '../../styles/Account.module.css'
-import Table from '../svgs/Table'
-import Tag from '../svgs/Tag'
+import Table from 'svgs/Table'
+import Tag from 'svgs/Tag'
+import s from '../Account.module.css'
 
 export default function Tabs({ setTab, tab }) {
   return (

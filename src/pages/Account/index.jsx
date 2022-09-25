@@ -1,10 +1,10 @@
+import NavBar from 'components/NavBar';
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
-import Header from "../components/AccountComp/Header";
-import Posts from "../components/AccountComp/Posts";
-import Tabs from '../components/AccountComp/Tabs';
-import NavBar from '../components/NavBar';
-import s from '../styles/Account.module.css';
+import s from './Account.module.css';
+import Header from "./components/Header";
+import Posts from "./components/Posts";
+import Tabs from './components/Tabs';
 
 export default function Account() {
     const { username } = useParams()

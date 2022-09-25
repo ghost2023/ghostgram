@@ -1,17 +1,17 @@
+import UnfollowModal from "components/Modals/UnfollowModal";
+import { useAuth } from "context/userContext";
+import { DB, SG } from "fb-config";
 import { equalTo, get, orderByChild, query, ref as dbRef } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import Chevron from "../../components/svgs/Chevron";
-import Following from "../../components/svgs/Following";
-import Options from "../../components/svgs/Options";
-import { DB, SG } from "../../fb-config";
-import s from '../../styles/AccountHeader.module.css';
-import { useAuth } from "../../userContext";
-import Gear from "../svgs/Gear";
-import UnfollowModal from "../UnfollowModal";
+import Chevron from "svgs/Chevron";
+import Following from "svgs/Following";
+import Gear from "svgs/Gear";
+import Options from "svgs/Options";
 import Followers from "./FollowersModal";
 import FollowingModal from "./FollowingModal";
+import s from './Header.module.css';
 
 export default function Header({ username }) {
     const { follows, follow, user, profileUrl} = useAuth()

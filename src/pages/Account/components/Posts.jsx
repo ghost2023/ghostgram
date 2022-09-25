@@ -1,11 +1,11 @@
+import NewPost from 'components/NewPostModal/';
+import PostPreview from 'components/PostPreview';
+import { useAuth } from 'context/userContext';
+import { DB } from 'fb-config';
 import { equalTo, get, orderByChild, query, ref } from 'firebase/database';
 import { useEffect, useState } from 'react';
-import { DB } from '../../fb-config';
-import s from '../../styles/Account.module.css';
-import { useAuth } from '../../userContext';
-import NewPost from '../NewPost';
-import Camera from '../svgs/Camera';
-import Post from './Post';
+import Camera from 'svgs/Camera';
+import s from '../Account.module.css';
 
 export default function Posts({ username }) {
     const [posts, setPosts] = useState([])
@@ -48,7 +48,7 @@ export default function Posts({ username }) {
   )
   return(
     <article className={s.postsection}>
-        {posts.map(post => <Post {...{post}} key={post.id}/>
+        {posts.map(post => <PostPreview {...{post}} key={post.id}/>
         )}
     </article>
   )
