@@ -1,14 +1,13 @@
+import { DB } from 'fb-config';
 import { get, query, ref as dbRef } from 'firebase/database';
 import { useEffect, useState } from 'react';
-import { DB } from '../fb-config';
-import s from '../styles/Post.module.css';
-import Overlay from './Overlay';
-import ButtonPanel from './post_com/ButtonPanel';
-import Comment from './post_com/Comment';
-import CommentInput from './post_com/CommentInput';
-import Header from './post_com/Header';
+import s from 'styles/Post.module.css';
+import ButtonPanel from '../Post/ButtonPanel';
+import Comment from '../Post/Comment';
+import CommentForm from '../Post/CommentForm';
+import Header from '../Post/Header';
 
-export default function PostExtended({ post, setOpen, timePosted, content }) {
+export default function PostModal({ post, timePosted, content }) {
   const [comments, setComments] = useState([])
 
   useEffect(() => {
@@ -21,7 +20,6 @@ export default function PostExtended({ post, setOpen, timePosted, content }) {
   }, [])
   
   return (
-    <Overlay onClick={() => setOpen(false)}>
       <div className={s['post-extended']} onClick={e => e.stopPropagation()}>
         <div className={s.content}>
           {content}
@@ -33,9 +31,8 @@ export default function PostExtended({ post, setOpen, timePosted, content }) {
           </div>
           <ButtonPanel {...{post}}/>
           <div className={s.timestamp}>{timePosted}</div>
-          <CommentInput postId={post.id}/>
+          <CommentForm postId={post.id}/>
         </div>
       </div>
-    </Overlay>
   )
 }

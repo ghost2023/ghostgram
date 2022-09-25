@@ -1,11 +1,11 @@
+import { useAuth } from 'context/userContext'
+import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DB } from '../fb-config'
-import style from '../styles/Modal.module.css'
-import { useAuth } from '../userContext'
-import Media from './Media'
-import Overlay from './Overlay'
+import style from 'styles/Modal.module.css'
+import Media from '../Media'
+import Overlay from '../Overlay'
 
 export default function UnfollowModal({ username, onUnfollow, closeModal }) {
   const { unFollow } = useAuth()
@@ -33,8 +33,8 @@ export default function UnfollowModal({ username, onUnfollow, closeModal }) {
         </div>
 
         <div className={style.btns}>
-          <button onClick={() => {unFollow(username);onUnfollow()}} className={style.unfollow}>Unfollow</button>
-          <button onClick={closeModal}>Cancel</button>
+          <button onClick={() => {unFollow(username);onUnfollow()}} className={`${style.warning} ${style.btn}`}>Unfollow</button>
+          <button onClick={closeModal} className={style.btn}>Cancel</button>
         </div>
       </div>
     </Overlay>
