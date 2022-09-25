@@ -1,12 +1,12 @@
+import { useAuth } from 'context/userContext'
+import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DB } from '../fb-config'
-import s from '../styles/MiniProfile.module.css'
-import { useAuth } from '../userContext'
-import AccountLink from './AccountLink'
-import Media from './Media'
-import UnfollowModal from './UnfollowModal'
+import AccountLink from '../AccountLink'
+import Media from '../Media'
+import UnfollowModal from '../Modals/UnfollowModal'
+import style from './style.module.css'
 
 export default function MiniProfile({ username, userData }) {
     const { follows, follow, user } = useAuth()
@@ -33,13 +33,13 @@ export default function MiniProfile({ username, userData }) {
 
     if(!userProfile) return null
   return (
-    <div className={s.account}>
+    <div className={style.account}>
         <Link to={`/${username}`}>
-            <div className={s.icon}>
+            <div className={style.icon}>
                 <Media path={`profiles/${userProfile.profile || ''}`}/>
             </div>
         </Link>
-        <div className={s["account-name"]}>
+        <div className={style["account-name"]}>
             <AccountLink {...{username}} />
             <span>
                 {userProfile.name}
@@ -49,7 +49,7 @@ export default function MiniProfile({ username, userData }) {
            <></>: 
             <>
                 {isFollow? 
-                    <button onClick={() => setModal(true)} className={s['unfollow-btn']}>Following</button>:
+                    <button onClick={() => setModal(true)} className={style['unfollow-btn']}>Following</button>:
                     <button onClick={() => {follow(username); setFollow(true)}}>Follow</button>
                 }
                 {!modal ||
