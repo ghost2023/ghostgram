@@ -1,13 +1,13 @@
+import { useAuth } from 'context/userContext';
 import { push, ref as dbRef, set } from 'firebase/database';
 import { ref, uploadBytes } from 'firebase/storage';
 import { useRef, useState } from "react";
-import { DB, SG } from '../fb-config';
-import s from '../styles/NewPost.module.css';
-import { useAuth } from '../userContext';
-import Overlay from "./Overlay";
-import Arrow from './svgs/Arrow';
-import Chevron from './svgs/Chevron';
-import Cross from './svgs/Cross';
+import Arrow from 'svgs/Arrow';
+import Chevron from 'svgs/Chevron';
+import Cross from 'svgs/Cross';
+import { DB, SG } from '../../fb-config';
+import Overlay from "../Overlay";
+import style from './style.module.css';
 
 export default function NewPost({ closeNewPost }) {
   const [isFilesValid, setFilesValidity] = useState(true)
@@ -58,11 +58,11 @@ export default function NewPost({ closeNewPost }) {
 
   return (
     <Overlay onClick={closeNewPost}>
-      <div className={s.portal} onClick={e => e.stopPropagation()}>
-          <div className={s.header}>
-            {!!validFiles.length && <div className={s.prevbtn}><Arrow/></div>}
+      <div className={style.portal} onClick={e => e.stopPropagation()}>
+          <div className={style.header}>
+            {!!validFiles.length && <div className={style.prevbtn}><Arrow/></div>}
             <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
-            {!!validFiles.length && <div className={s.nextbtn}>
+            {!!validFiles.length && <div className={style.nextbtn}>
               <button onClick={upload}>Share</button>
             </div>}
           </div>
@@ -79,14 +79,14 @@ function InitialPage({ isValid, fileImport, invalidFile}){
   const inpRef = useRef(0)
 
   return(
-    <div className={`${s.body} ${s.empty}`} onDrop={e => fileImport(e, true)} onDragOver={e => {e.preventDefault();e.dataTransfer.dropEffect = 'copy'}}>
+    <div className={`${style.body} ${style.empty}`} onDrop={e => fileImport(e, true)} onDragOver={e => {e.preventDefault();e.dataTransfer.dropEffect = 'copy'}}>
       <UploadSVG err={!isValid}/>
-      <div className={s.info}>
+      <div className={style.info}>
         <h1>{isValid ? "Drag photos and videos here" : "This file is not supported"}</h1>
-        {isValid || <p className={s.errmsg}><span>{invalidFile}</span> could not be uploaded.</p>}
+        {isValid || <p className={style.errmsg}><span>{invalidFile}</span> could not be uploaded.</p>}
       </div>
       <input type="file" ref={inpRef} name="files" multiple onChange={fileImport}/>
-      <button className={s.select} type="file" onClick={() => {inpRef.current.click()}}>Select
+      <button className={style.select} type="file" onClick={() => {inpRef.current.click()}}>Select
 {isValid? " from computer" : " other files"}</button>
     </div>
   )
@@ -98,49 +98,49 @@ function SharePage({ files, setCaption, setNoComment, setHideStats, hideStats, n
 
 
   return(
-    <div className={s.share}>
-      <div className={s.preview}>
-        {files.length === 1 ? <div className={s.image}><img src={URL.createObjectURL(files[0])} alt="" /></div>:<></>}
+    <div className={style.share}>
+      <div className={style.preview}>
+        {files.length === 1 ? <div className={style.image}><img src={URL.createObjectURL(files[0])} alt="" /></div>:<></>}
       </div>
-      <div className={s.settings}>
-        <div className={s.profile}>
-          <div className={s.profileicon}><img src={user.profile} alt="" /></div>
-          <div className={s.profilename}>{user.username}</div>
+      <div className={style.settings}>
+        <div className={style.profile}>
+          <div className={style.profileicon}><img src={user.profile} alt="" /></div>
+          <div className={style.profilename}>{user.username}</div>
         </div>
-        <textarea name="" id="" cols="30" rows="10" className={s.caption} placeholder="Write a caption..." onInput={e => setCaption(e.target.value)}></textarea>
-        <div className={s["location-wrapper"]}></div>
-        <div className={s["accessibility-wrapper"]}>
-          <div className={`${s.expander} ${isAccessExpanded && s.expanded}`} onClick={() => setAccessExpanded(prev => !prev)}>
+        <textarea name="" id="" cols="30" rows="10" className={style.caption} placeholder="Write a caption..." onInput={e => setCaption(e.target.value)}></textarea>
+        <div className={style["location-wrapper"]}></div>
+        <div className={style["accessibility-wrapper"]}>
+          <div className={`${style.expander} ${isAccessExpanded && style.expanded}`} onClick={() => setAccessExpanded(prev => !prev)}>
             <h2>Accessibility</h2>
             <Chevron />
           </div>
-          {isAccessExpanded && <div className={`${s.accessibilty} ${s.expand}`}>
+          {isAccessExpanded && <div className={`${style.accessibilty} ${style.expand}`}>
             <p>Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.</p>
             {files.map(i => {
               return (<p key={i.lastModified}>{i.name}</p>)
             })}
           </div>}
         </div>
-        <div className={s["advance-wrapper"]}>
-          <div className={`${s.expander} ${isAdvanceExpanded && s.expanded}`} onClick={() => setAdvanceExpanded(prev => !prev)}>
+        <div className={style["advance-wrapper"]}>
+          <div className={`${style.expander} ${isAdvanceExpanded && style.expanded}`} onClick={() => setAdvanceExpanded(prev => !prev)}>
             <h2>Advanced settings</h2>
             <Chevron/>
           </div>
-          {isAdvanceExpanded && <div className={`${s.advance} ${s.expand}`}>
-            <div className={s['advance-setting']}>
-              <div className={s['setting-wrapper']}>
+          {isAdvanceExpanded && <div className={`${style.advance} ${style.expand}`}>
+            <div className={style['advance-setting']}>
+              <div className={style['setting-wrapper']}>
                 <h1>Hide like and view counts on this post</h1>
-                <div className={s['toggle-wrapper']}>
-                  <div className={`${s.toggle} ${hideStats? s.checked : ''}`} onClick={() => setHideStats(p => !p)}><span></span></div>
+                <div className={style['toggle-wrapper']}>
+                  <div className={`${style.toggle} ${hideStats? style.checked : ''}`} onClick={() => setHideStats(p => !p)}><span></span></div>
                 </div>
               </div>
               <p>Only you will see the total number of likes and views on this post. You can change this later by going to the ··· menu at the top of the post. To hide like counts on other people's posts, go to your account settings.</p>
             </div>
-            <div className={s['advance-setting']}>
-              <div className={s['setting-wrapper']}>
+            <div className={style['advance-setting']}>
+              <div className={style['setting-wrapper']}>
                 <h1>Turn off commenting</h1>
-                <div className={s['toggle-wrapper']}>
-                  <div className={`${s.toggle} ${noComment? s.checked : ''}`} onClick={() => setNoComment(p => !p)}><span></span></div>
+                <div className={style['toggle-wrapper']}>
+                  <div className={`${style.toggle} ${noComment? style.checked : ''}`} onClick={() => setNoComment(p => !p)}><span></span></div>
                 </div>
               </div>
               <p>You can change this later by going to the ··· menu at the top of your post.</p>
