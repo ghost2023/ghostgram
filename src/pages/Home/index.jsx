@@ -1,5 +1,5 @@
-import NavBar from '../components/NavBar'
-import Timeline from '../components/Timeline'
+import NavBar from 'components/NavBar'
+import Timeline from './Timeline'
 
 function Home() {
 

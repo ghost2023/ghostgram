@@ -1,9 +1,9 @@
+import Post from 'components/Post'
+import { useAuth } from 'context/userContext'
+import { DB } from 'fb-config'
 import { equalTo, get, limitToFirst, orderByChild, query, ref } from 'firebase/database'
-import React, { useEffect, useState } from 'react'
-import Post from '../components/Post'
-import { DB } from '../fb-config'
-import s from '../styles/Home.module.css'
-import { useAuth } from '../userContext'
+import { useEffect, useState } from 'react'
+import s from './Home.module.css'
 
 export default function Timeline() {
     const { follows } = useAuth()
