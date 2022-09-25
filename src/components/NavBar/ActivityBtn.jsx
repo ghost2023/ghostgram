@@ -1,5 +1,5 @@
-import s from '../../styles/NavBar.module.css'
-import Heart from '../svgs/Heart'
+import Heart from 'svgs/Heart'
+import s from './NavBar.module.css'
 
 export default function ActivityBtn({ isOpen, open }) {
     return (
