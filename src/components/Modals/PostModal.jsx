@@ -17,7 +17,7 @@ export default function PostModal({ post, timePosted, content }) {
       const commentsArr = Object.values(d.val()) 
       setComments(commentsArr.filter(item => item.content))
     })
-  }, [])
+  }, [post])
   
   return (
       <div className={s['post-extended']} onClick={e => e.stopPropagation()}>
