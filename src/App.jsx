@@ -1,5 +1,6 @@
 import UserAuthProvider, { useAuth } from "context/userContext";
 import Account from 'pages/Account';
+import AccountSettings from "pages/AccountSettings";
 import Home from 'pages/Home';
 import Loading from 'pages/Loading';
 import Login from 'pages/Login';
@@ -19,6 +20,8 @@ function App() {
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/:username' element={<Account/>}/>
             <Route path="/p/:postId" element={<Post/>}/>
+            <Route path="/accounts/edit" element={<AccountSettings/>} />
+            <Route path="/accounts/password/change/" element={<AccountSettings/>} />
           </Routes>
         </Load>
       </UserAuthProvider>
@@ -26,7 +29,7 @@ function App() {
   );
 }
 
-function PrivateRoute({  }) {
+function PrivateRoute() {
   const { user } = useAuth()
   if (!user) {
     return <Login/>;
