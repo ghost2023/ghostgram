@@ -5,6 +5,8 @@
     width: 400px;
     max-height: calc(100% - 40px);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 .modal-header{
     height: 42px;
@@ -21,6 +23,18 @@
     font-weight: 600;
     flex-grow: 1;
     justify-content: center;
+}
+.header{
+    margin: 32px;
+    margin-bottom: 16px;
+}
+.header h1{
+    display: flex;
+    justify-content: center;
+    margin: -4px 0 -6px;
+    line-height: 24px;
+    font-size: 18px;
+    font-weight: 600;
 }
 .close-btn{
     position: absolute;
@@ -63,14 +77,19 @@
     width: 100%;
     line-height: 21px;
     border-top: 1px solid var(--border-grey);
+    font-size: 14px;
 }
-.btn::active{
+.btn:active{
     background-color: rgba(0, 0, 0, .1);
     opacity: 1;
 }
 .warning{
     font-weight: 700;
     color: var(--warning);
+}
+.blue-txt-btn{
+    color: var(--lg-blue);
+    font-weight: 700;
 }
 .options{
     display: flex;
