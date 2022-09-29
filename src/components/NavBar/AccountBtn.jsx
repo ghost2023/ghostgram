@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import Gear from 'svgs/Gear'
 import Mark from 'svgs/Mark'
 import Profile from 'svgs/Profile'
+import { logOut } from 'utils/services'
 import style from './NavBar.module.css'
 
 export default function AccountBtn({ isDBOpen, openDB }) {
-  const { user, logOut, profileUrl } = useAuth()
+  const { user: { username }, profileUrl } = useAuth()
 
   return (
     <div className={style.account + (isDBOpen ? ' ' + style.foc: '')}>
@@ -14,7 +15,7 @@ export default function AccountBtn({ isDBOpen, openDB }) {
               <img src={profileUrl} alt="" />
             </div>
             <div className={style.dropdown}>
-              <Link to={"/" + user?.username}>
+              <Link to={"/" + username}>
                 <div className={style.tab}>
                   <Profile isSmall />
                   <div className={style.label}>
@@ -22,7 +23,7 @@ export default function AccountBtn({ isDBOpen, openDB }) {
                   </div>
                 </div>
               </Link>
-              <Link to={`/${user?.username}/saved`}>
+              <Link to={`/${username}/saved`}>
                 <div className={style.tab}>
                   <Mark isSmall />
                   <div className={style.label}>
@@ -30,7 +31,7 @@ export default function AccountBtn({ isDBOpen, openDB }) {
                   </div>
                 </div>
               </Link>
-              <Link to={`/${user?.username}/accounts/edit`}>
+              <Link to={`/accounts/edit`}>
                 <div className={style.tab}>
                   <Gear isSmall />
                   <div className={style.label}>
