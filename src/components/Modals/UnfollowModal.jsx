@@ -21,7 +21,7 @@ export default function UnfollowModal({ username, onUnfollow, closeModal }) {
   if(!profile) return null
   return (
     <Overlay onClick={closeModal}>
-      <div className={style.modal}>
+      <div className={style.modal} onClick={e => e.stopPropagation()}>
         <div className={style.profile}>
           <Link to={`/${username}`}>
             <Media path={`profiles/${profile}`}/>
