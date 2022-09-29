@@ -46,6 +46,7 @@ export default function UserAuthProvider({ children }) {
         return {...prev, followings: newFollowingCount}
       })
     }
+
     async function getFollowing(username){
       const followsQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(username))
       const followsData = (await get(followsQuery)).val()
@@ -57,10 +58,16 @@ export default function UserAuthProvider({ children }) {
       setFollows(followsArr)
     }
 
+    async function updateProfile(newProfile){
+      const url = await getDownloadURL(ref(SG, `profiles/${newProfile}`)) 
+      setProfileUrl(url)
+    }
+
     useEffect(() => {
         // watch for any user changes
         const unsubscribe = onAuthStateChanged(auth, async (currentuser) => {
           if (!currentuser){
+            setUser()
             setLoading(false)
             return console.log('no user')
           }
@@ -76,11 +83,9 @@ export default function UserAuthProvider({ children }) {
           console.log("Auth", username);
           setUser(userObj)
 
-          // get and store profile image Url
           await getFollowing(username)
-                      
-          const url = await getDownloadURL(ref(SG, `profiles/${userObj.profile}`)) 
-          setProfileUrl(url)
+          await updateProfile(userObj.profile)
+          
           setLoading(false)
         });
         
@@ -88,7 +93,7 @@ export default function UserAuthProvider({ children }) {
       }, []);
 
 
-  return (<userContext.Provider value={{ user, isLoading, follows, follow, unFollow, profileUrl }}>
+  return (<userContext.Provider value={{ user, isLoading, follows, follow, unFollow, profileUrl, setUser, updateProfile }}>
       {children}
     </userContext.Provider>)
 }
