@@ -12,9 +12,7 @@ import style from './NavBar.module.css'
 import Search from './Search'
 
 export default function NavBar({ page }) {
-  console.log(style)
-  
-  const [isNewPostOpen, openNewPost ]= useState(false)
+  const [isNewPostOpen, openNewPost] = useState(false)
   const [isFDOpen, setFDOpen] = useState(false)
   const [isDBOpen, setDBOpen] = useState(false)
 
@@ -27,27 +25,27 @@ export default function NavBar({ page }) {
           </Link>
         </div>
         <div className={style.search}>
-          <Search/> 
+          <Search />
         </div>
         <div className={style.panel}>
           <Link to='/' className={style['panel-btn']}>
-            <House full={page == 'home'}/>
+            <House full={page === 'home'} />
           </Link>
           <Link to='/direct/inbox' className={style['panel-btn']}>
-            <Kite full={page == 'home'}/>
+            <Kite full={page === 'home'} />
           </Link>
           <div className={style['panel-btn']} onClick={() => openNewPost(true)}>
-            <Add full={isNewPostOpen}/>
+            <Add full={isNewPostOpen} />
           </div>
-          <Link to='/explore' className={style['panel-btn']}>      
-            <Compass full={page == 'explore'} />
+          <Link to='/explore' className={style['panel-btn']}>
+            <Compass full={page === 'explore'} />
           </Link>
-          <ActivityBtn isOpen={isFDOpen} open={() => setFDOpen(true)}/> 
+          <ActivityBtn isOpen={isFDOpen} open={() => setFDOpen(true)} />
           <AccountBtn isDBOpen={isDBOpen} openDB={() => setDBOpen(true)} />
         </div>
       </div>
-      <div className={style.hider + (isDBOpen || isFDOpen ? ` ${style.open}` : '' )} onClick={() => {setFDOpen(false);setDBOpen(false)}}></div>
-      {isNewPostOpen? <NewPostModal closeNewPost={() => openNewPost(false)} />:<></>}
+      <div className={style.hider + (isDBOpen || isFDOpen ? ` ${style.open}` : '')} onClick={() => { setFDOpen(false); setDBOpen(false) }}></div>
+      {isNewPostOpen ? <NewPostModal closeNewPost={() => openNewPost(false)} /> : <></>}
     </div>
   )
 }
