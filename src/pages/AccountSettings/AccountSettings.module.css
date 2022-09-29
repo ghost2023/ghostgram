@@ -1,0 +1,142 @@
+.page{
+    height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+}
+
+.page main{
+    display: flex;
+    background: #fff;
+    max-width: 935px;
+    border: 1px solid var(--border-grey);
+    margin: 30px auto 0;
+    flex-grow: 1;
+    border-radius: 3px;
+    width: 100%;
+}
+.tabs{
+    flex-basis: 236px;
+    border-right: 1px solid var(--border-grey);
+}
+.tab{
+    padding: 16px 16px 16px 32px;
+    color: var(--blck-clr);
+    font-size: 16px;
+    line-height: 20px;
+}
+.tabs .active{
+    padding-left: 30px;
+    border-left: 2px solid var(--blck-clr);
+}
+.tab:hover{
+    padding-left: 30px;
+    border-left: 2px solid var(--border-grey);
+    background: var(--grey-100);
+}
+.content{
+    flex: 1 1 400px;
+    min-width: 50px;
+}
+.profile{
+    display: flex;
+    margin-top: 32px;
+}
+.profile-pic{
+    width: 38px;
+    height: 38px;
+    display: flex;
+    margin: 2px 32px 0 124px;
+}
+.profile-pic button{
+    background: none;
+    border: 0;
+    display: inline;
+    padding: 0 !important;
+}
+.profile-pic img{
+    overflow: hidden;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+}
+.profile-name{
+    margin-right: 20px;
+}
+.profile-name h1{
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 22px;
+    margin-bottom: 2px;
+}
+.profile-name button{
+    font-size: 14px;
+    font-weight: 600;
+    text-align: start;
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0 !important;
+    color: var(--lg-blue);
+}
+
+.content form{
+    margin: 16px 0;
+}
+.row{
+    display: flex;
+    margin-bottom: 16px;
+}
+.row aside{
+    flex: 0 0 194px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 18px;
+    margin-top: 6px;
+    padding-left: 32px;
+    padding-right: 32px;
+    text-align: right;    
+}
+.row .main{
+    flex-basis: 355px;
+    flex-direction: row;
+    padding-right: 60px;
+}
+.row input[type=text], .row textarea{
+    padding: 0 10px;
+    border: 1px solid var(--border-grey);
+    border-radius: 3px;
+    font-size: 16px;
+    height: 32px;
+    width: 100%;
+    max-width: 355px;
+    border-radius: 3px;
+}
+.row input[type=text]:focus-visible, .row textarea:focus-visible{
+    border-color: var(--blck-clr);
+    outline: 1px solid var(--blck-clr);
+}
+.row textarea{
+    height: 60px;
+    padding: 6px 10px;
+    resize: vertical;
+}
+
+.name-help{
+    color: var(--grey-clr);
+    font-size: 12px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+.submit{
+    margin-top: 16px;
+}
+.submit button{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: 600;
+    padding: 5px 9px !important;
+    background: var(--lg-blue);
+    color: #fff;
+    font-size: 14px;
+}
