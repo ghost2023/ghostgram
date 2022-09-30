@@ -27,6 +27,7 @@
 .tabs .active{
     padding-left: 30px;
     border-left: 2px solid var(--blck-clr);
+    font-weight: 600;
 }
 .tab:hover{
     padding-left: 30px;
@@ -47,7 +48,7 @@
     display: flex;
     margin: 2px 32px 0 124px;
 }
-.profile-pic button{
+.profile-pic>button{
     background: none;
     border: 0;
     display: inline;
@@ -63,13 +64,13 @@
 .profile-name{
     margin-right: 20px;
 }
-.profile-name h1{
+.profile-name>h1{
     font-size: 20px;
     font-weight: normal;
     line-height: 22px;
     margin-bottom: 2px;
 }
-.profile-name button{
+.profile-name>button{
     font-size: 14px;
     font-weight: 600;
     text-align: start;
@@ -82,6 +83,9 @@
 
 .content form{
     margin: 16px 0;
+}
+.passwordForm{
+    margin-top: 32px !important;
 }
 .row{
     display: flex;
@@ -97,10 +101,14 @@
     padding-right: 32px;
     text-align: right;    
 }
-.row .main{
+.main{
+    display: flex;
+    flex-direction: column;
     flex-basis: 355px;
-    flex-direction: row;
     padding-right: 60px;
+}
+.passwordForm .main{
+    flex-grow: 1;
 }
 .row input[type=text], .row textarea{
     padding: 0 10px;
@@ -120,6 +128,15 @@
     height: 60px;
     padding: 6px 10px;
     resize: vertical;
+}
+.row input[type=password]{
+    background: var(--grey-100);
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-grey);
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 30px;
 }
 
 .name-help{
