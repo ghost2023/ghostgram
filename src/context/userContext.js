@@ -1,14 +1,10 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set, update } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { auth, DB, SG } from '../fb-config';
 
-const userContext = createContext()
-
-export function useAuth(){
-    return useContext(userContext)
-}
+export const userContext = createContext()
 
 export default function UserAuthProvider({ children }) {
     const [user, setUser] = useState();
