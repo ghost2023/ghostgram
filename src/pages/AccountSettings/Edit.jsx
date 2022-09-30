@@ -2,17 +2,18 @@ import { useAuth } from 'context/userContext'
 import { auth, DB } from 'fb-config'
 import { updateEmail } from 'firebase/auth'
 import { ref, remove, set, update } from 'firebase/database'
+import useModal from 'hooks/useModal'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import style from './AccountSettings.module.css'
 import ProfileModal from './ProfileModal'
 
 export default function Edit() {
+  const [openProfileModal, , Modal] = useModal(ProfileModal)
   const { user, profileUrl, setUser } = useAuth()
   const [username, setUsername] = useState(user.username)
   const [email, setEmail] = useState(user.email)
   const [isValid, setValid] = useState(false)
-  const [profileModalOpen, setProfileModal] = useState(false)
 
   const onUsernameChange = e => {
     const val = e.target.value
@@ -101,7 +102,8 @@ export default function Edit() {
           </div>
           <div className={style["profile-name"]}>
             <h1>{user.username}</h1>
-            <button onClick={() => setProfileModal(true)}>Change profile photo</button>
+            <button onClick={openProfileModal}>Change profile photo</button>
+            {Modal}
           </div>
         </div>
         <form onSubmit={formSubmit}>
@@ -159,8 +161,6 @@ export default function Edit() {
           </div>
         </form>
       </article>
-      {profileModalOpen &&
-        <ProfileModal closeModal={() => setProfileModal(false)} />}
     </main>
   )
 }
