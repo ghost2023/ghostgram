@@ -1,8 +1,8 @@
 import Overlay from 'components/Overlay'
-import { useAuth } from 'context/userContext'
 import { DB, SG } from 'fb-config'
 import { ref as dbRef, update } from 'firebase/database'
 import { deleteObject, ref, uploadBytes } from 'firebase/storage'
+import useAuth from 'hooks/useAuth'
 import { useRef } from 'react'
 import style from 'styles/Modal.module.css'
 

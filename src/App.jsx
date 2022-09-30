@@ -1,4 +1,5 @@
-import UserAuthProvider, { useAuth } from "context/userContext";
+import UserAuthProvider from "context/userContext";
+import useAuth from "hooks/useAuth";
 import Account from 'pages/Account';
 import AccountSettings from "pages/AccountSettings";
 import Home from 'pages/Home';

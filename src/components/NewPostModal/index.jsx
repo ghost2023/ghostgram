@@ -1,6 +1,6 @@
-import { useAuth } from 'context/userContext';
 import { push, ref as dbRef, set } from 'firebase/database';
 import { ref, uploadBytes } from 'firebase/storage';
+import useAuth from 'hooks/useAuth';
 import { useRef, useState } from "react";
 import Arrow from 'svgs/Arrow';
 import Chevron from 'svgs/Chevron';
@@ -13,12 +13,10 @@ export default function NewPost({ closeNewPost }) {
   const [isFilesValid, setFilesValidity] = useState(true)
   const [firstInValidFile, setFirstInValid] = useState("")
   const [validFiles, setValidFiles] = useState([])
-  const [pageNum, setPageNum] = useState(0)
   const [hideStats, setHideStats] = useState(false)
   const [noComment, setNoComment] = useState(false)
   const [caption, setCaption] = useState("")
   const { user } = useAuth()
-  const numberOfPage = 2
 
   function upload(){
     const fileNames = []

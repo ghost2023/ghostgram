@@ -30,7 +30,7 @@ export default function SignUp() {
             <span>OR</span>
             <div className={s.line}></div>
         </div>
-        <form onSubmit={e => submitForm(e)} >
+        <form onSubmit={submitForm} >
             <input type="text" placeholder='Email' onInput={e => {setEmail(e.target.value)}} />
             <input type="text" placeholder='Full Name' onInput={e => {setName(e.target.value)}} />
             <input type="text" placeholder='Username' onInput={e => {setUserName(e.target.value)}} />

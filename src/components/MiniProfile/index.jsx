@@ -1,6 +1,6 @@
-import { useAuth } from 'context/userContext'
 import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
+import useAuth from 'hooks/useAuth'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AccountLink from '../AccountLink'

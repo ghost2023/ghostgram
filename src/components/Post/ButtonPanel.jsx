@@ -1,7 +1,7 @@
 import AccountLink from 'components/AccountLink'
-import { useAuth } from 'context/userContext'
 import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
+import useAuth from 'hooks/useAuth'
 import { useEffect, useState } from 'react'
 import style from 'styles/Post.module.css'
 import Bubble from 'svgs/Bubble'

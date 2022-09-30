@@ -23,7 +23,7 @@ export default function Login() {
       <div className={s.ver}>
         <div className={s.container}>
           <img src={logo} alt="" />
-          <form action="" onSubmit={e => loginSub(e)}>
+          <form action="" onSubmit={loginSub}>
             <input type="text" placeholder='Phone number, username, or email' onInput={e => setEmail(e.target.value)} />
             <input type="password" placeholder='Password' onInput={e => setPassword(e.target.value)} />
             <button type="submit" disabled={!email || !password}>Log In</button>

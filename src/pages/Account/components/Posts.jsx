@@ -1,8 +1,8 @@
 import NewPost from 'components/NewPostModal/';
 import PostPreview from 'components/PostPreview';
-import { useAuth } from 'context/userContext';
 import { DB } from 'fb-config';
 import { equalTo, get, orderByChild, query, ref } from 'firebase/database';
+import useAuth from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
 import Camera from 'svgs/Camera';
 import s from '../Account.module.css';

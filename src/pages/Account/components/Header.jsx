@@ -1,8 +1,8 @@
 import UnfollowModal from "components/Modals/UnfollowModal";
-import { useAuth } from "context/userContext";
 import { DB, SG } from "fb-config";
 import { equalTo, get, orderByChild, query, ref as dbRef } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
+import useAuth from "hooks/useAuth";
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Chevron from "svgs/Chevron";
@@ -34,8 +34,29 @@ export default function Header({ username }) {
 }
 
     useEffect(() => {
-        setUpProfile()
-    },[username])
+        (async () => {
+            if(username === user.username){
+                setUserAcc(user)
+                setProfile(profileUrl)
+                return
+            }
+            const data = await get(dbRef(DB, 'users/' + username));
+            const val = data.val()
+            setUserAcc({...val, username})
+
+            // getting profile picture
+            getDownloadURL(ref(SG, 'profiles/' + val.profile)).then(u => setProfile(u))
+
+            // get followers
+            const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(username))
+            const followersData = await get(followersQuery)
+            const followersArr = Object.values(followersData.val()).map(item => item.follower)
+            setFollowers(followersArr)
+
+            // set where the logged in user is following this user
+            setIsFollowing(follows.some(i => i.user === username))
+        })()
+    },[username, profileUrl, user, follows])
 
     function followUnFollow() {
         if(!isFollowing){
@@ -45,30 +66,6 @@ export default function Header({ username }) {
         else{
             setUnFollowModal(true)
         }
-    }
-
-    async function setUpProfile(){
-        if(username === user.username){
-            setUserAcc(user)
-            setProfile(profileUrl)
-            return
-        }
-        const data = await get(dbRef(DB, 'users/' + username));
-        const val = data.val()
-        setUserAcc({...val, username})
-
-        // getting profile picture
-        getDownloadURL(ref(SG, 'profiles/' + val.profile)).then(u => setProfile(u))
-
-        // get followers
-        const followersQuery = query(dbRef(DB, 'follows/'), orderByChild('followe'), equalTo(username))
-        const followersData = await get(followersQuery)
-        const followersArr = Object.values(followersData.val()).map(item => item.follower)
-        setFollowers(followersArr)
-
-        // set where the logged in user is following this user
-        setIsFollowing(follows.some(i => i.user === username))
-
     }
 
   return (

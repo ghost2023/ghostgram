@@ -1,7 +1,7 @@
-import { useAuth } from 'context/userContext'
 import { auth, DB } from 'fb-config'
 import { updateEmail } from 'firebase/auth'
 import { ref, remove, set, update } from 'firebase/database'
+import useAuth from 'hooks/useAuth'
 import useModal from 'hooks/useModal'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'

@@ -1,4 +1,4 @@
-import { useAuth } from 'context/userContext';
+import useAuth from 'hooks/useAuth';
 import { useState } from 'react';
 import s from 'styles/Post.module.css';
 import Emoji from 'svgs/Emoji';

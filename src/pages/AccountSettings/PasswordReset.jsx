@@ -1,12 +1,10 @@
-import { useAuth } from 'context/userContext'
-import useModal from 'hooks/useModal'
+import useAuth from 'hooks/useAuth'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import style from './AccountSettings.module.css'
 
 export default function PasswordReset() {
-  const { user:{ username, email }, profileUrl } = useAuth()
-  const [] = useModal()
+  const { user:{ username}, profileUrl } = useAuth()
   const [valid, setValid] = useState()
 
   const formChange = e => {

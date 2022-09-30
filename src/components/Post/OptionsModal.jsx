@@ -1,6 +1,6 @@
 import UnfollowModal from 'components/Modals/UnfollowModal';
 import Overlay from "components/Overlay";
-import { useAuth } from 'context/userContext';
+import useAuth from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import style from 'styles/Modal.module.css';
@@ -17,7 +17,7 @@ export default function OptionsModal({ postId, closeModal, user }) {
 
     useEffect(() => {
         setFollowing(follows.some(follow => follow.user === user))
-    }, [postId])
+    }, [postId, user, follows])
     function copyLink(){
         const {ClipboardItem} = window
         const type = "text/plain";

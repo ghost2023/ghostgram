@@ -1,4 +1,4 @@
-import { useAuth } from 'context/userContext'
+import useAuth from 'hooks/useAuth'
 import { Link } from 'react-router-dom'
 import Gear from 'svgs/Gear'
 import Mark from 'svgs/Mark'
