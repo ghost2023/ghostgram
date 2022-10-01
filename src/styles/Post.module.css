@@ -39,7 +39,7 @@
     font-weight: 600;
     flex-grow: 2;
 }
-.header button{
+.options{
     border: none;
     background: none;
     display: flex;
