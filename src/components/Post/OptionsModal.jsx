@@ -1,6 +1,7 @@
 import UnfollowModal from 'components/Modals/UnfollowModal';
 import Overlay from "components/Overlay";
 import useAuth from 'hooks/useAuth';
+import useModal from 'hooks/useModal';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import style from 'styles/Modal.module.css';
@@ -8,9 +9,9 @@ import style from 'styles/Modal.module.css';
 export default function OptionsModal({ postId, closeModal, user }) {
     const { follows } = useAuth()
     const [isFollowing, setFollowing] = useState(false)
-    const [unFollowModalOpen, setunFollowModal] = useState(false)
     const isSameLocation = useLocation().pathname === `/p/${postId}`
-    const UnFollowbtn = <button onClick={() => setunFollowModal(true)} className={`${style.btn} ${style.warning}`}>Unfollow</button>
+    const [unFollowModal, openFollowModal] = useModal(UnfollowModal, {username: user})
+    const UnFollowbtn = <button onClick={openFollowModal} className={`${style.btn} ${style.warning}`}>Unfollow</button>
     const GoToBtn = <Link to={`/p/${postId}`}>
                         <button className={style.btn}>Go to post</button>
                     </Link>
@@ -42,8 +43,7 @@ export default function OptionsModal({ postId, closeModal, user }) {
             <button className={style.btn} onClick={copyLink}>Copy link</button>
             <button className={style.btn} onClick={closeModal}>Cancel</button>
         </div>
-        {unFollowModalOpen && 
-        <UnfollowModal username={user} closeModal={() => setunFollowModal(false)}/>}
+        {unFollowModal}
       </div>
     </Overlay>
   )

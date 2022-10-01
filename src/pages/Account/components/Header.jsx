@@ -3,14 +3,14 @@ import { DB, SG } from "fb-config";
 import { equalTo, get, orderByChild, query, ref as dbRef } from "firebase/database";
 import { getDownloadURL, ref } from "firebase/storage";
 import useAuth from "hooks/useAuth";
+import useModal from "hooks/useModal";
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Chevron from "svgs/Chevron";
 import Following from "svgs/Following";
 import Gear from "svgs/Gear";
 import Options from "svgs/Options";
-import Followers from "./FollowersModal";
-import FollowingModal from "./FollowingModal";
+import FollowersModal from "./FollowersModal";
 import s from './Header.module.css';
 
 export default function Header({ username }) {
@@ -19,17 +19,17 @@ export default function Header({ username }) {
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
     const [followers, setFollowers] = useState([])
-    const [followersModal, setFollowersModal] = useState(false)
-    const [followingModal, setFollowingModal] = useState(false)
-    const [unFollowModal, setUnFollowModal] = useState(false)
+    const [followerModal, openFollowersModal] = useModal(FollowersModal, {username, followers})
+    const [followingModal, openFollowingModal] = useModal(FollowersModal, {username, onUnfollow:() => setIsFollowing(false)})
+    const [unFollowModal, openUnfollowModal] = useModal(UnfollowModal,{username, onUnfollow:() => setIsFollowing(false)})
     const Btns = {
         MessageBtn : <button className={s.msgbtn}>Message</button>,
         FollowBtn : <button className={`${s.followbtn} ${!isFollowing && s.b }`} onClick={followUnFollow}>
-            {isFollowing? <Following/> : "Follow"}
-        </button>,
+                        {isFollowing? <Following/> : "Follow"}
+                    </button>,
         SuggestionBtn : <button className={`${s.suggestbtn} ${!isFollowing && s.b }`}>
-            <Chevron isSmall dxn='d'/>
-        </button>,
+                            <Chevron isSmall dxn='d'/>
+                        </button>,
         EditBtn : <Link to="accounts/edit/"><button>Edit profile</button></Link>
 }
 
@@ -64,7 +64,7 @@ export default function Header({ username }) {
             setIsFollowing(true)
         } 
         else{
-            setUnFollowModal(true)
+            openUnfollowModal(true)
         }
     }
 
@@ -100,8 +100,8 @@ export default function Header({ username }) {
             </div>
             <div className={s.stats}>
                 <div className={s.posts}><span>{userAcc?.posts || 0}</span> posts</div>
-                <div className={s.followers} onClick={() => setFollowersModal(true)}><span>{followers.length}</span> followers</div>
-                <div className={s.following} onClick={() => setFollowingModal(true)}><span>{userAcc?.followings || 0}</span> following</div>
+                <div className={s.followers} onClick={openFollowersModal}><span>{followers.length}</span> followers</div>
+                <div className={s.following} onClick={openFollowingModal}><span>{userAcc?.followings || 0}</span> following</div>
             </div>
             <div className={s.info}>
                 <div className={s.name}>{userAcc?.name}</div>
@@ -111,12 +111,9 @@ export default function Header({ username }) {
                 <div className={s.bio}>{userAcc?.bio}</div>}
             </div>
         </div>
-        {!followersModal || 
-        <Followers {...{username}} {...{followers}} closeModal={() => setFollowersModal(false)} />}
-        {!followingModal || 
-        <FollowingModal {...{username}} closeModal={() => setFollowingModal(false)} />}
-        {!unFollowModal ||
-        <UnfollowModal {...{username}} onUnfollow={() => setIsFollowing(false)} closeModal={() => setUnFollowModal(false)}/>}
+        {followerModal}
+        {followingModal}
+        {unFollowModal}
     </main>
   )
 }

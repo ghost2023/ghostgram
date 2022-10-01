@@ -1,3 +1,4 @@
+import Overlay from 'components/Overlay';
 import { DB } from 'fb-config';
 import { get, query, ref as dbRef } from 'firebase/database';
 import { useEffect, useState } from 'react';
@@ -7,19 +8,21 @@ import Comment from '../Post/Comment';
 import CommentForm from '../Post/CommentForm';
 import Header from '../Post/Header';
 
-export default function PostModal({ post, timePosted, content }) {
+export default function PostModal({closeModal, post, timePosted = "", content = <></> }) {
   const [comments, setComments] = useState([])
 
   useEffect(() => {
     if(post.noComment) return
     get(query(dbRef(DB, 'comments/'+ post.id)))
-    .then(d => {
-      const commentsArr = Object.values(d.val()) 
+    .then(snapShot => {
+      if(!snapShot.val()) return
+      const commentsArr = Object.values(snapShot.val()) 
       setComments(commentsArr.filter(item => item.content))
     })
   }, [post])
   
   return (
+    <Overlay onClick={closeModal}>
       <div className={s['post-extended']} onClick={e => e.stopPropagation()}>
         <div className={s.content}>
           {content}
@@ -34,5 +37,6 @@ export default function PostModal({ post, timePosted, content }) {
           <CommentForm postId={post.id}/>
         </div>
       </div>
+    </Overlay>
   )
 }

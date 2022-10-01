@@ -9,7 +9,7 @@ import style from './AccountSettings.module.css'
 import ProfileModal from './ProfileModal'
 
 export default function Edit() {
-  const [openProfileModal, , Modal] = useModal(ProfileModal)
+  const [Modal, openProfileModal] = useModal(ProfileModal)
   const { user, profileUrl, setUser } = useAuth()
   const [username, setUsername] = useState(user.username)
   const [email, setEmail] = useState(user.email)
@@ -41,6 +41,11 @@ export default function Edit() {
     setValid(true)
   }
 
+  const formChange = e => {
+    const form = e.target.closest("form")
+    // const 
+  }
+ 
   const formSubmit = async (e) => {
     e.preventDefault()
     console.log(e.target)

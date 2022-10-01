@@ -1,4 +1,5 @@
 import img from 'assets/logo.png'
+import useModal from 'hooks/useModal'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Add from 'svgs/Add'
@@ -12,7 +13,7 @@ import style from './NavBar.module.css'
 import Search from './Search'
 
 export default function NavBar({ page }) {
-  const [isNewPostOpen, openNewPost] = useState(false)
+  const [newPostModal, openNewPost] = useModal(NewPostModal)
   const [isFDOpen, setFDOpen] = useState(false)
   const [isDBOpen, setDBOpen] = useState(false)
 
@@ -29,13 +30,13 @@ export default function NavBar({ page }) {
         </div>
         <div className={style.panel}>
           <Link to='/' className={style['panel-btn']}>
-            <House full={page === 'home'} />
+            <House full={page === 'home' && !newPostModal && !isFDOpen  } />
           </Link>
           <Link to='/direct/inbox' className={style['panel-btn']}>
-            <Kite full={page === 'home'} />
+            <Kite full={page === 'inbox'} />
           </Link>
           <div className={style['panel-btn']} onClick={() => openNewPost(true)}>
-            <Add full={isNewPostOpen} />
+            <Add full={!!newPostModal} />
           </div>
           <Link to='/explore' className={style['panel-btn']}>
             <Compass full={page === 'explore'} />
@@ -45,7 +46,7 @@ export default function NavBar({ page }) {
         </div>
       </div>
       <div className={style.hider + (isDBOpen || isFDOpen ? ` ${style.open}` : '')} onClick={() => { setFDOpen(false); setDBOpen(false) }}></div>
-      {isNewPostOpen ? <NewPostModal closeNewPost={() => openNewPost(false)} /> : <></>}
+      {newPostModal}
     </div>
   )
 }

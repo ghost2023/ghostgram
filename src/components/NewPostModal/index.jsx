@@ -9,7 +9,7 @@ import { DB, SG } from '../../fb-config';
 import Overlay from "../Overlay";
 import style from './style.module.css';
 
-export default function NewPost({ closeNewPost }) {
+export default function NewPost({ closeModal }) {
   const [isFilesValid, setFilesValidity] = useState(true)
   const [firstInValidFile, setFirstInValid] = useState("")
   const [validFiles, setValidFiles] = useState([])
@@ -36,7 +36,7 @@ export default function NewPost({ closeNewPost }) {
       hideStats,
       noComment,
       timeStamp: Date.now()
-    }).then(() => closeNewPost())
+    }).then(() => closeModal())
   }
 
   function fileImport(e, isDrop = false){
@@ -55,19 +55,19 @@ export default function NewPost({ closeNewPost }) {
   }
 
   return (
-    <Overlay onClick={closeNewPost}>
+    <Overlay onClick={closeModal}>
       <div className={style.portal} onClick={e => e.stopPropagation()}>
-          <div className={style.header}>
-            {!!validFiles.length && <div className={style.prevbtn}><Arrow/></div>}
-            <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
-            {!!validFiles.length && <div className={style.nextbtn}>
-              <button onClick={upload}>Share</button>
-            </div>}
-          </div>
-          {validFiles.length ? 
-            <SharePage files={Array.from(validFiles)} {...{setCaption, setHideStats, setNoComment, hideStats, noComment}}/>:
-            <InitialPage isValid={isFilesValid} fileImport={fileImport} invalidFile={firstInValidFile}/>
-          }
+        <div className={style.header}>
+          {!!validFiles.length && <div className={style.prevbtn}><Arrow/></div>}
+          <p>{isFilesValid? "Create new post" : "File couldn't be uploaded"}</p>
+          {!!validFiles.length && <div className={style.nextbtn}>
+            <button onClick={upload}>Share</button>
+          </div>}
+        </div>
+        {validFiles.length ? 
+          <SharePage files={Array.from(validFiles)} {...{setCaption, setHideStats, setNoComment, hideStats, noComment}}/>:
+          <InitialPage isValid={isFilesValid} fileImport={fileImport} invalidFile={firstInValidFile}/>
+        }
       </div>
       <Cross/>
     </Overlay>

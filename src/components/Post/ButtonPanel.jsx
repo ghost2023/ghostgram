@@ -2,6 +2,7 @@ import AccountLink from 'components/AccountLink'
 import { DB } from 'fb-config'
 import { get, ref } from 'firebase/database'
 import useAuth from 'hooks/useAuth'
+import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
 import style from 'styles/Post.module.css'
 import Bubble from 'svgs/Bubble'
@@ -11,14 +12,13 @@ import Mark from 'svgs/Mark'
 import { disLikePost, likePost } from 'utils/services'
 import LikesModal from './LikesModal'
 
-
-export default function ButtonPanel({ post, viewComments }) {
+export default function ButtonPanel({ post, openCommentModal }) {
     const { user, follows } = useAuth()
     const [peopleLikes, setPeopleLikes] = useState([])
     const [likes, setLikes] = useState(0)
     const [isLiked, setLiked] = useState(false)
     const [LikeView, setLikeView] = useState(<></>)
-    const [likeModalOpen, setLikeModalOpen] = useState(false)
+    const [likeModal, openLikeModal] = useModal(LikesModal, {PostId: post.id})
 
     useEffect(() => {
       (async() => {
@@ -43,7 +43,7 @@ export default function ButtonPanel({ post, viewComments }) {
           setPeopleLikes(peopleLiked)
           
       })()
-    }, [])
+    }, [post, follows])
 
     useEffect(() => {
       if(likes === 0){
@@ -80,7 +80,7 @@ export default function ButtonPanel({ post, viewComments }) {
         setLikeView(<>Liked by {firstPerson} and <span>{othersSpan}</span></>)
         
       }
-    }, [likes, peopleLikes])
+    }, [likes, peopleLikes, isLiked])
 
     function likeUnLike(){
         if(isLiked){
@@ -99,11 +99,11 @@ export default function ButtonPanel({ post, viewComments }) {
   return (<>
     <section className={style.btns}>
       <button className={style.likebtn + (isLiked ? ` ${style.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
-      <button className={style.commentbtn} onClick={viewComments}><Bubble/></button>
+      <button className={style.commentbtn} onClick={openCommentModal}><Bubble/></button>
       <button className={style.sharebtn}><Kite/></button>
       <button className={style.markbtn}><Mark/></button>
     </section>
-    {!likes || <div className={style.likecount} onClick={() => setLikeModalOpen(true)}>{LikeView}</div>}
-    {likeModalOpen && <LikesModal PostId={post.id} closeModal={() => setLikeModalOpen(false)}/>}
+    {!likes || <div className={style.likecount} onClick={openLikeModal}>{LikeView}</div>}
+    {likeModal}
   </>)
 }
