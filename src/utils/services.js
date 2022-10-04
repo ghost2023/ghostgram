@@ -1,22 +1,19 @@
 import { auth, DB } from "fb-config"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
-import { get, push, ref as dbRef, remove, set } from "firebase/database"
+import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set } from "firebase/database"
 
-export async function likePost(postId, user){
-    const likeref = dbRef(DB, `likes/${postId}/${user.username}`)
+export async function likePost(postId, uid){
+    const likeref = dbRef(DB, `likes/${postId}/${uid}`)
 
     await set(likeref, {
-        username : user.username,
-        profile : user.profile,
         timestamp: Date.now(),
-        name: user.name
     })
     const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
     await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount + 1)
 }
 
-export async function disLikePost(postId, username){
-    await remove(dbRef(DB, `likes/${postId}/${username}`))
+export async function disLikePost(postId, uid){
+    await remove(dbRef(DB, `likes/${postId}/${uid}`))
 
     const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
     await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount - 1)
@@ -27,9 +24,7 @@ export async function commentPost(postId, user, content){
     
     await set(commentRef, {
         content,
-        userId: user.uid,
-        username: user.username,
-        userProfile: user.profile,
+        user: user.uid,
         timestamp: Date.now(),
     })
     
@@ -41,10 +36,10 @@ export function login(email, password) {
 }
 export async function signUp(name, username, email, password) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    set(dbRef(DB, 'users/' + username), {
+    await set(dbRef(DB, 'users/' + userCredential.user.uid), {
         name,
         email,
-        uid : userCredential.user.uid,
+        username,
         profile: 'default-avatar.jpg',
         occupation: '',
         bio: '',
@@ -55,4 +50,35 @@ export async function signUp(name, username, email, password) {
 }
 export function logOut() {
     return signOut(auth);
+}
+
+export async function getUserByUsername(username){
+    const snapShot = await get(query(
+        dbRef(DB, 'users/'),
+        orderByChild("username"),
+        equalTo(username)
+        ))
+    const userArr = Object.entries(snapShot.val())[0]
+    return {...userArr[1], uid: userArr[0]}
+}
+
+export async function getUserByUid(uid){
+    const snapShot = await get(dbRef(DB, `users/${uid}`))
+    return {...snapShot.val(), uid}
+}
+
+export async function getFollowing(uid){
+    const followQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(uid))
+    const snapShot = await get(followQuery)
+    if(!snapShot.val()) return []
+    return Object.entries(snapShot.val())
+    .map(([id, body]) => {return {id, user: body.user}})
+}
+
+export async function getFollowers(uid){
+    const followQuery = query(dbRef(DB, 'follows/'), orderByChild('user'), equalTo(uid))
+    const snapShot = await get(followQuery)
+    if(!snapShot.val()) return []
+    return Object.entries(snapShot.val())
+    .map(([id, body]) => {return {id, user: body.user}})
 }
