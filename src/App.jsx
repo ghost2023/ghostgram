@@ -2,6 +2,7 @@ import UserAuthProvider from "context/userContext";
 import useAuth from "hooks/useAuth";
 import Account from 'pages/Account';
 import AccountSettings from "pages/AccountSettings";
+import Explore from 'pages/Explore';
 import Home from 'pages/Home';
 import Loading from 'pages/Loading';
 import Login from 'pages/Login';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/p/:postId" element={<Post/>}/>
             <Route path="/accounts/edit" element={<AccountSettings/>} />
             <Route path="/accounts/password/change/" element={<AccountSettings/>} />
+            <Route path="/explore" element={<Explore/>} />
           </Routes>
         </Load>
       </UserAuthProvider>
