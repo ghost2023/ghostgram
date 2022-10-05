@@ -14,6 +14,9 @@
     border-radius: 3px;
     height: min(90vh, 50vw);
     margin: 0 64px;
+    max-width: calc(100% -128px);
+    max-height: calc(100% - 64px);
+    min-height: 450px;
 }
 
 .header{
@@ -50,15 +53,23 @@
     width: 100%;
 }
 .post-extended .content{
-    width: 60%;
-    background: var(--blck-clr);
+    height: 100%;
+    background: #000;
+    display: flex;    
+    flex-grow: 1;
+    align-items: center;
+    overflow: hidden;
+    max-height: 619px;
+    max-width: 489.253px;
 }
-.post .pic{
+.pic{
     width: 100%;
     height: 100%;
     background: var(--grey-100);
 }
-.post-extended .pic{background: #000;}
+.post-extended .pic{
+    background: none;
+}
 .pic img{
     object-fit: contain;
     width: 100%;
@@ -67,7 +78,9 @@
 .side{
     display: flex;
     flex-direction: column;
-    width: 50%;
+    max-width: 500px;
+    min-width: 405px;
+    align-items: stretch;
 }
 .btns{
     display: flex;
