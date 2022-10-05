@@ -1,6 +1,5 @@
 .slider{
     position: relative;
-    height: 100%;
 }
 .hider{
     overflow: hidden;
@@ -18,21 +17,29 @@
 .indicators{
     display: flex;
     left: 50%;
-    transform: translateY(-100%);
     margin: 15px 0;
-}
-.bottom{
-    transform: translateY(0);
+    bottom: 0;
 }
 .indicator{
     height: 6px;
     width: 6px;
-    background: var(--grey-300);
+    background: #fff;
+    opacity: 0.4;
     border-radius: 50%;
     margin-right: 4px;
 }
-.current{
+.bottom{
+    bottom: -35px;
+}
+.bottom .indicator{
+    opacity: 1;
+    background: var(--grey-300);
+}
+.bottom .current{
     background: var(--lg-blue);
+}
+.current{
+    opacity: 1;
 }
 .indicators, .btn{
     position: absolute;
