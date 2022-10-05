@@ -1,6 +1,7 @@
-import { auth, DB } from "fb-config"
+import { auth, DB, SG } from "fb-config"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set } from "firebase/database"
+import { getDownloadURL, ref } from "firebase/storage"
 
 export async function likePost(postId, uid){
     const likeref = dbRef(DB, `likes/${postId}/${uid}`)
@@ -81,4 +82,14 @@ export async function getFollowers(uid){
     if(!snapShot.val()) return []
     return Object.entries(snapShot.val())
     .map(([id, body]) => {return {id, user: body.user}})
+}
+
+export async function getUserProfile(profilePath){
+    return await getDownloadURL(ref(SG, `profiles/${profilePath}`)) 
+}
+
+export async function getUserwithProfileUrl(uid){
+    const user = await getUserByUid(uid)
+    const profileUrl = await getUserProfile(user.profile)
+    return {...user, profileUrl}
 }
