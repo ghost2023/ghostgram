@@ -1,11 +1,11 @@
 import AccountLink from 'components/AccountLink';
 import Media from 'components/Media';
 import PostModal from 'components/Modals/PostModal';
+import Overlay from 'components/Overlay';
 import Slider from 'components/Slider';
 import { DB } from 'fb-config';
 import { equalTo, get, orderByChild, query, ref as dbRef } from 'firebase/database';
 import useAuth from 'hooks/useAuth';
-import useModal from 'hooks/useModal';
 import { useEffect, useState } from 'react';
 import s from 'styles/Post.module.css';
 import { formatPostTime } from 'utils/formatTime';
@@ -19,7 +19,7 @@ export default function Post({post}) {
   const [timePosted, setTimePosted] = useState('')
   const [userComments, setUserComments] = useState([])
   const [content, setContent] = useState(<></>)
-  const [commentModal, openCommentModal] = useModal(PostModal, {post, timePosted, content})
+  const [commentModal, setCommentModal] = useState(false)
   const updateComments = (comment) => setUserComments(p => [ ...p, comment ])
 
   useEffect(() => {
@@ -53,17 +53,20 @@ export default function Post({post}) {
     
   },[post, uid])
 
+  const openModal = () => setCommentModal(true)
+  const closeModal = () => setCommentModal(false)
+
   return (
     <article className={s.post}>
-      <Header postId={post.id} userProfile={post.userProfile} username={post.username}/>
+      <Header postId={post.id} username={post.username}/>
       <div className={s.content}>{content}</div>
 
-      <ButtonPanel {...{post, openCommentModal} }/>
+      <ButtonPanel {...{post, openModal} }/>
 
       {!post.caption.length ||
         <section className={s.caption}><span>{post.username}</span> {post.caption}</section>}
       {(post.noComment || !comments) ||
-        <div className={s.viewcomment} onClick={openCommentModal}>View all {comments} comments</div>
+        <div className={s.viewcomment} onClick={openModal}>View all {comments} comments</div>
       }
       {!userComments.length ||
         <div className={s['comments-prev']}>
@@ -74,7 +77,12 @@ export default function Post({post}) {
       }
       <div className={s.timestamp}>{timePosted}</div>
       <CommentForm postId={post.id} {...{updateComments}}/>
-      {commentModal}
+      {commentModal && 
+        <Overlay onClick={closeModal}>
+          <PostModal {...{content, post, timePosted}}/>
+        </Overlay>
+      }
+      
     </article>
   )
 }
