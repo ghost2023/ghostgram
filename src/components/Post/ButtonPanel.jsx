@@ -12,7 +12,7 @@ import Mark from 'svgs/Mark'
 import { disLikePost, likePost } from 'utils/services'
 import LikesModal from './LikesModal'
 
-export default function ButtonPanel({ post, openCommentModal }) {
+export default function ButtonPanel({ post, openModal }) {
     const { user, follows } = useAuth()
     const [peopleLikes, setPeopleLikes] = useState([])
     const [likes, setLikes] = useState(0)
@@ -99,7 +99,7 @@ export default function ButtonPanel({ post, openCommentModal }) {
   return (<>
     <section className={style.btns}>
       <button className={style.likebtn + (isLiked ? ` ${style.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
-      <button className={style.commentbtn} onClick={openCommentModal}><Bubble/></button>
+      <button className={style.commentbtn} onClick={openModal}><Bubble/></button>
       <button className={style.sharebtn}><Kite/></button>
       <button className={style.markbtn}><Mark/></button>
     </section>
