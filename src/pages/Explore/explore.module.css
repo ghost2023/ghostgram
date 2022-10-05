@@ -1,0 +1,68 @@
+.postlist{
+    display: grid;
+    margin: 0 auto;
+    padding: 24px 20px 30px;
+    gap: 28px;
+    width: 100%;
+    max-width: 935px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.postpreview{
+    display: flex;
+    width: 100%;
+    aspect-ratio: 1;
+}
+.carousel{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.65);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 10px;
+    cursor: pointer;
+}
+.prevbtn, .nextbtn{
+    border: none;
+    background: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    display: flex;
+    position: absolute;
+    z-index: 10000;
+    top: 47%;
+    box-shadow:0 4px 12px rgb(0 0 0 / 15%);
+}
+.prevbtn>svg, .nextbtn>svg{
+    color: #000;
+    fill: #000;
+}
+.closebtn{
+    position: absolute;
+    top:0;
+    right: 0;
+    background: none;
+    border: none;
+    padding: 8px;
+    display: inline;
+    margin: 10px;
+}
+.closebtn>svg{
+    color: #fff;
+    fill: #fff;
+}
+.prevbtn:hover, .nextbtn:hover{
+    opacity: 0.7;
+}
+.prevbtn{
+    left: 8px;
+    transform: rotate(-90deg);
+}
+.nextbtn{
+    right: 8px;
+    transform: rotate(90deg);
+}
