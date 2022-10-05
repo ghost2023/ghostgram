@@ -1,59 +1,56 @@
-import { DB } from 'fb-config'
-import { get, ref } from 'firebase/database'
 import useAuth from 'hooks/useAuth'
-import { useState } from 'react'
+import useModal from 'hooks/useModal'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getUserwithProfileUrl } from 'utils/services'
 import AccountLink from '../AccountLink'
-import Media from '../Media'
 import UnfollowModal from '../Modals/UnfollowModal'
 import style from './style.module.css'
 
-export default function MiniProfile({ username, userData }) {
-    const { follows, follow, user } = useAuth()
-    const [userProfile, setProfile] = useState()
-    const [modal, setModal] = useState(false)
+export default function MiniProfile({ uid, username, name, profileUrl }) {
+    const { follows, follow, user, profileUrl: loggedProfile } = useAuth()
+    const isLoggedUser = uid === user.uid
     const [isFollow, setFollow] = useState(false)
+    const [account, setAccount] = useState({ uid, username, name, profileUrl })
+    const [unFollowModal, openUnfollowModal] = useModal(UnfollowModal, {
+        uid,
+        username: account.username, 
+        profileUrl: account.profileUrl, 
+        onUnfollow: () => setFollow(false)
+    })
 
-    useState(() => {
-        if(!username && !userData) return
-        if(username === user.userProfile){
-            setProfile(user)
+    useEffect(() => {
+        setFollow(follows.some(item => item.user === uid))
+        if(isLoggedUser){
+            setAccount({...user})
+            return
         }
-        else if(userData){
-            setProfile(userData)
-            setFollow(follows.some(item => item.user === username))
+        if(!username){
+            getUserwithProfileUrl(uid)
+            .then(setAccount)
         }
-        else{
-            get(ref(DB, `users/${username}/`)).then(snapShot => {
-                setProfile(snapShot.val())
-            })
-            setFollow(follows.some(item => item.user === username))
-        }
-    }, [username])
 
-    if(!userProfile) return null
+    }, [uid, username, follows, user, isLoggedUser])
+
+    if(!account.username) return null
   return (
     <div className={style.account}>
         <Link to={`/${username}`}>
             <div className={style.icon}>
-                <Media path={`profiles/${userProfile.profile || ''}`}/>
+                <img src={isLoggedUser? loggedProfile : account.profileUrl } alt="" />
             </div>
         </Link>
         <div className={style["account-name"]}>
-            <AccountLink {...{username}} />
-            <span>
-                {userProfile.name}
-            </span>
+            <AccountLink username={account.username} />
+            <span>{name}</span>
         </div>
-        {username === user.username?
-           <></>: 
+        {isLoggedUser||
             <>
                 {isFollow? 
-                    <button onClick={() => setModal(true)} className={style['unfollow-btn']}>Following</button>:
-                    <button onClick={() => {follow(username); setFollow(true)}}>Follow</button>
+                    <button onClick={openUnfollowModal} className={style['unfollow-btn']}>Following</button>:
+                    <button onClick={() => {follow(uid); setFollow(true)}}>Follow</button>
                 }
-                {!modal ||
-                    <UnfollowModal {...{username}} onUnfollow={() => setFollow(false)} closeModal={() => setModal(false)}/>}
+                {unFollowModal}
             </>
         }
     </div>

@@ -1,25 +1,21 @@
 import MiniProfile from 'components/MiniProfile/'
 import Overlay from 'components/Overlay'
-import { DB } from 'fb-config'
-import { equalTo, get, orderByChild, query, ref } from 'firebase/database'
 import { useEffect, useState } from 'react'
 import s from 'styles/Modal.module.css'
 import Cross from 'svgs/Cross'
+import { getFollowing } from 'utils/services'
 
-export default function FollowingModal({ username, closeModal }) {
+export default function FollowingModal({ uid, closeModal }) {
   const [following, setFollowing] = useState([])
 
   useEffect(() => {
-    get(query(
-      ref(DB, 'follows/'), 
-      orderByChild('follower'), 
-      equalTo(username)
-    )).then(snapShot => {
-      if(!snapShot.val()) return
-      const followingArr = Object.values(snapShot.val()).map(item => item.followe)
+    getFollowing(uid)
+    .then(users => {
+      if(!users.length) return
+      const followingArr = Object.values(users).map(item => item.user)
       setFollowing(followingArr)
     })
-  }, [username])
+  }, [uid])
 
   return (
     <Overlay onClick={closeModal}>
@@ -31,7 +27,7 @@ export default function FollowingModal({ username, closeModal }) {
           </button>
         </div>
         <div className={s['modal-body']}>
-          {following.map(un => <MiniProfile key={un} username={un}/>)}
+          {following.map(uid => <MiniProfile key={uid} {...{uid}}/>)}
         </div>
       </div>
     </Overlay>

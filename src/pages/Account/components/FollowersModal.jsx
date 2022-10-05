@@ -1,9 +1,24 @@
 import MiniProfile from 'components/MiniProfile/'
 import Overlay from 'components/Overlay'
+import { useEffect, useState } from 'react'
 import s from 'styles/Modal.module.css'
 import Cross from 'svgs/Cross'
+import { getUserByUid, getUserProfile } from 'utils/services'
 
 export default function FollowersModal({ closeModal, followers = [] }) {
+  const [followersData, setFollowersData] = useState([])
+
+  useEffect(() => {
+    (async () => {
+      const usersArr = []
+      for(const uid of followers){
+        const { username, profile } = await getUserByUid(uid)
+        const profileUrl = await getUserProfile(profile)
+        usersArr.push({uid, username, profileUrl})
+      }
+      setFollowersData(usersArr)
+    })()
+  }, [followers])
 
   return (
     <Overlay onClick={closeModal}>
@@ -15,7 +30,7 @@ export default function FollowersModal({ closeModal, followers = [] }) {
           </button>
         </div>
         <div className={s['modal-body']}>
-          {followers.map(un => <MiniProfile key={un} username={un}/>)}
+          {followersData.map(user => <MiniProfile key={user.uid} {...user}/>)}
         </div>
       </div>
     </Overlay>
