@@ -2,7 +2,7 @@ import NavBar from 'components/NavBar';
 import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { getUserByUsername } from 'utils/services';
-import s from './Account.module.css';
+import style from './Account.module.css';
 import Header from "./components/Header";
 import Posts from "./components/Posts";
 import Tabs from './components/Tabs';
@@ -20,11 +20,11 @@ export default function Account() {
   return (
     <>
       <NavBar page={'account'}/>
-      <div className={s.page}>
+      <div className={style.page}>
           <Header {...{userAcc}}/>
           <Tabs {...{setTab, tab}}/>
           <Posts uid={userAcc.uid}/>
-          <div className={s.stories}></div>
+          <div className={style.stories}></div>
       </div>
     </>
   )
