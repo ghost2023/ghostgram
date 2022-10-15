@@ -25,6 +25,8 @@
     justify-content: center;
 }
 .header{
+    display: flex;
+    flex-direction: column;
     margin: 32px;
     margin-bottom: 16px;
 }
@@ -35,6 +37,13 @@
     line-height: 24px;
     font-size: 18px;
     font-weight: 600;
+}
+.header p{
+    margin: -3px 0 -4px;
+    padding-top: 16px;
+    text-align: center;
+    color: var(--grey-clr);
+    line-height: 18px;
 }
 .close-btn{
     position: absolute;
