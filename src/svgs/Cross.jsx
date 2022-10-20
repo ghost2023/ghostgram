@@ -1,5 +1,8 @@
-export default function Cross(small) { 
-    const size = small?"18": "48" 
+export default function Cross({ small, xsmall }) { 
+    let size = "48";
+    if(small) size = "18"
+    if(xsmall) size = "8"
+    
     return (
         <svg viewBox="0 0 24 24" width={size} height={size} >
             <title>Close</title>
