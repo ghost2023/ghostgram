@@ -4,7 +4,7 @@ import PostsList from "./PostsList";
 export default function index() {
   return (
     <>
-        <NavBar page="expore"/>
+        <NavBar page="explore"/>
         <PostsList/>
     </>
   )
