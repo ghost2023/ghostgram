@@ -1,95 +1,117 @@
-import { auth, DB, SG } from "fb-config"
+import { auth, db, realDb, SG } from "fb-config"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
-import { equalTo, get, orderByChild, push, query, ref as dbRef, remove, set } from "firebase/database"
+import { equalTo, get, orderByChild, query as realQuery, ref as dbRef, set } from "firebase/database"
+import { addDoc, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore"
 import { getDownloadURL, ref } from "firebase/storage"
 
-export async function likePost(postId, uid){
-    const likeref = dbRef(DB, `likes/${postId}/${uid}`)
-
-    await set(likeref, {
-        timestamp: Date.now(),
-    })
-    const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
-    await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount + 1)
+export async function signUp(name, username, email, password) {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const promiseArr = [
+        setDoc(doc(db, 'users', userCredential.user.uid), {
+            name,
+            username,
+            profile: 'default-avatar.jpg',
+            occupation: '',
+            bio: '',
+            followings: 0,
+            posts: 0,
+            isVerified: false,
+        }),
+        set(dbRef(realDb, `users/${userCredential.user.uid}`),{
+            name,
+            username,
+            profile: 'default-avatar.jpg',
+        })
+    ]
+    return await Promise.all(promiseArr)
 }
 
-export async function disLikePost(postId, uid){
-    await remove(dbRef(DB, `likes/${postId}/${uid}`))
-
-    const prevLikeCount = (await get(dbRef(DB, `likes/${postId}/count`))).val()
-    await set(dbRef(DB, `likes/${postId}/count`), prevLikeCount - 1)
-}
-
-export async function commentPost(postId, user, content){
-    const commentRef = push(dbRef(DB,  `comments/${postId}/`))
-    
-    await set(commentRef, {
-        content,
-        user: user.uid,
-        timestamp: Date.now(),
-    })
-    
-    const prevCommentCount = (await get(dbRef(DB, `comments/${postId}/count`))).val()
-    await set(dbRef(DB, `comments/${postId}/count`), prevCommentCount + 1)
-}
 export function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
 }
-export async function signUp(name, username, email, password) {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await set(dbRef(DB, 'users/' + userCredential.user.uid), {
-        name,
-        email,
-        username,
-        profile: 'default-avatar.jpg',
-        occupation: '',
-        bio: '',
-        followings: 0,
-        posts: 0,
-        isVerified: false,
-    })
-}
+
 export function logOut() {
     return signOut(auth);
 }
 
+export async function getUserFullData(uid) {
+    const snap = await getDoc(doc(db, 'users', uid))
+    return {...snap.data(), uid}
+}
+export async function getUserDataByUsername(username){
+    const userData = await getDocs(query(
+        collection(db, "users"),
+        where("username", "==", username)
+    ))
+    if(userData.empty) return undefined
+    return {...userData.docs[0].data(), uid: userData.docs[0].id}
+}
 export async function getUserByUsername(username){
-    const snapShot = await get(query(
-        dbRef(DB, 'users/'),
+    const snap = await get(realQuery(
+        dbRef(realDb, "users/"),
         orderByChild("username"),
         equalTo(username)
-        ))
-    const userArr = Object.entries(snapShot.val())[0]
-    return {...userArr[1], uid: userArr[0]}
+    ))
+    return {...snap[0].val(), uid: snap[0].key}
 }
 
 export async function getUserByUid(uid){
-    const snapShot = await get(dbRef(DB, `users/${uid}`))
-    return {...snapShot.val(), uid}
+    const snap = await get(dbRef(realDb, 'users/' + uid))
+    return {...snap.val(), uid}
 }
 
-export async function getFollowing(uid){
-    const followQuery = query(dbRef(DB, 'follows/'), orderByChild('follower'), equalTo(uid))
-    const snapShot = await get(followQuery)
-    if(!snapShot.val()) return []
-    return Object.entries(snapShot.val())
-    .map(([id, body]) => {return {id, user: body.user}})
-}
-
-export async function getFollowers(uid){
-    const followQuery = query(dbRef(DB, 'follows/'), orderByChild('user'), equalTo(uid))
-    const snapShot = await get(followQuery)
-    if(!snapShot.val()) return []
-    return Object.entries(snapShot.val())
-    .map(([id, body]) => {return {id, user: body.user}})
-}
-
-export async function getUserProfile(profilePath){
-    return await getDownloadURL(ref(SG, `profiles/${profilePath}`)) 
-}
-
-export async function getUserwithProfileUrl(uid){
+export async function getUserWithProfileUrl(uid){
     const user = await getUserByUid(uid)
     const profileUrl = await getUserProfile(user.profile)
     return {...user, profileUrl}
+}
+
+export async function getFollowing(uid){
+   const list = await getDocs(collection(db, 'users', uid, 'follows'))
+   return list.docs.map(item => item.id)
+}
+
+export async function getFollowers(uid){
+    const usersData = await getDocs(query(
+        collectionGroup(db, 'follows'),
+        where('uid', '==', uid)
+    ))
+    return usersData.docs.map(item => item.data().uid)
+}
+
+export function getUserProfile(profilePath){
+    return getDownloadURL(ref(SG, `profiles/${profilePath}`)) 
+}
+
+export async function getComments(postId) {
+    const comments = await getDocs(collection(db, 'posts', postId, 'comments'))
+    return comments.docs.map(item => item.data())
+}
+
+export async function getLikes(postId){
+    const likes = await getDocs(collection(db, 'posts', postId, 'likes'))
+    return likes.docs.map(item => item.id)
+}
+
+export async function likePost(postId, uid){
+    await setDoc(doc(db, 'posts', postId, 'likes', uid),{})
+}
+
+export async function disLikePost(postId, uid){
+    await deleteDoc(doc(db, 'posts', postId, 'likes', uid))
+}
+
+export async function commentPost(postId, uid, comment){
+    await addDoc(collection(db, 'posts', postId, 'comments'), {
+        user: uid,
+        content: comment,
+        timeStamp: Date.now()
+    })
+}
+
+export function getPostContents(paths){
+    const promiseArr = paths.map(path => {
+        return getDownloadURL(ref(SG, `posts/${path}`))
+    })
+    return Promise.all(promiseArr)
 }

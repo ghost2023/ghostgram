@@ -11,20 +11,20 @@ import { getFollowers, getUserProfile } from "utils/services";
 import FollowersModal from "./FollowersModal";
 import s from './Header.module.css';
 
-export default function Header({ userAcc }) {
-    const { follows, follow, user, profileUrl} = useAuth()
+export default function Header({ user, isSameUser }) {
+    const { follows, follow, profileUrl } = useAuth()
     const [profile, setProfile] = useState("")
     const [isFollowing, setIsFollowing] = useState(false)
     const [followers, setFollowers] = useState([])
     const modalProps = {
-        uid: userAcc.uid,
-        username: userAcc.username,
+        uid: user.uid,
+        username: user.username,
         profileUrl: profile,
         onUnfollow:() => setIsFollowing(false)
     }
-    const [followerModal, openFollowersModal] = useModal(FollowersModal, { followers})
-    const [followingModal, openFollowingModal] = useModal(FollowersModal, { uid: userAcc.uid, onUnfollow: modalProps.onUnfollow})
     const [unFollowModal, openUnfollowModal] = useModal(UnfollowModal, modalProps)
+    const [followerModal, openFollowersModal] = useModal(FollowersModal, { followers})
+    const [followingModal, openFollowingModal] = useModal(FollowersModal, { uid: user.uid, onUnfollow: () => setIsFollowing(false)})
     const Btns = {
         MessageBtn : <button className={s.msgbtn}>Message</button>,
         FollowBtn : <button className={`${s.followbtn} ${!isFollowing && s.b }`} onClick={followUnFollow}>
@@ -35,28 +35,27 @@ export default function Header({ userAcc }) {
                         </button>,
         EditBtn : <Link to="accounts/edit/"><button>Edit profile</button></Link>
     }
-    const isSameUser = userAcc.uid === user.uid
 
     useEffect(() => {
-        if(isSameUser) return setProfile(profileUrl)
         (async () => {
             // getting profile picture
-            getUserProfile(userAcc.profile)
-            .then(setProfile)
+            if(isSameUser) setProfile(profileUrl)
+            else getUserProfile(user.profile)
+                    .then(setProfile)
 
             // get followers
-            const followersArr = await getFollowers(userAcc.uid)
-            setFollowers(followersArr.map(item => item.user))
+            const followersArr = await getFollowers(user.uid)
+            setFollowers(followersArr)
 
             // set where the logged in user is following this user
-            setIsFollowing(follows.some(i => i.user === userAcc.uid))
+            if(!isSameUser) setIsFollowing(follows.includes(user.uid))
         })()
-    },[userAcc, profileUrl, follows, isSameUser])
+    },[user, profileUrl, follows, isSameUser])
 
     function followUnFollow() {
         if(!isFollowing){
-            follow(userAcc.username)
-            setIsFollowing(true)
+            follow(user.uid)
+            .then(setIsFollowing(true))
         } 
         else{
             openUnfollowModal(true)
@@ -73,7 +72,7 @@ export default function Header({ userAcc }) {
         <div className={s.detail}>
             <div className={s['username-wrapper']}>
                 <div className={s.username}>
-                    <h1>{userAcc.username}</h1>
+                    <h1>{user.username}</h1>
                 </div>
                 <div className={s.btns}>
                     {!isSameUser? 
@@ -92,16 +91,16 @@ export default function Header({ userAcc }) {
                 }
             </div>
             <div className={s.stats}>
-                <div className={s.posts}><span>{userAcc.posts}</span> posts</div>
+                <div className={s.posts}><span>{user.posts}</span> posts</div>
                 <div className={s.followers} onClick={openFollowersModal}><span>{followers.length}</span> followers</div>
-                <div className={s.following} onClick={openFollowingModal}><span>{userAcc.followings}</span> following</div>
+                <div className={s.following} onClick={openFollowingModal}><span>{user.followings}</span> following</div>
             </div>
             <div className={s.info}>
-                <div className={s.name}>{userAcc?.name}</div>
-                {!!userAcc?.occupation?.length && 
-                <div className={s.occ}>{userAcc?.occupation}</div>}
-                {!!userAcc?.bio?.length &&
-                <div className={s.bio}>{userAcc?.bio}</div>}
+                <div className={s.name}>{user?.name}</div>
+                {!!user?.occupation?.length && 
+                <div className={s.occ}>{user?.occupation}</div>}
+                {!!user?.bio?.length &&
+                <div className={s.bio}>{user?.bio}</div>}
             </div>
         </div>
         {followerModal}

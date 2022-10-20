@@ -1,6 +1,6 @@
 import PostPreview from "components/PostPreview"
-import { DB } from "fb-config"
-import { get, limitToFirst, query, ref } from "firebase/database"
+import { db } from "fb-config"
+import { collection, getDocs, limit, query } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import style from './explore.module.css'
 import PostsCarousel from "./PostsCarousel"
@@ -11,17 +11,17 @@ export default function PostsList() {
     const [index, setIndex] = useState(-1)
     
     useEffect(() => {
-      get( query(
-        ref(DB, 'posts/'),
-        limitToFirst(30)
-        )).then(snapShot => {
-          const PostsArray = Object.entries(snapShot.val()).map(([id, body]) => {
-            return {id, ...body}
-          })
-          console.log(PostsArray)
-          setPosts(PostsArray)
-          setLoadingStatus(false)
+
+      getDocs(query(collection(db, 'posts'), limit(30)))
+      .then(snap => {
+        
+        const PostsArray = snap.docs.map(item => {
+          return { id: item.id, ...item.data()}
         })
+        console.log(PostsArray)
+        setPosts(PostsArray)
+        setLoadingStatus(false)
+      })
     }, [])
 
     if(isLoading) return <></>

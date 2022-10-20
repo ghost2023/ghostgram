@@ -1,53 +1,44 @@
 import AccountLink from 'components/AccountLink';
-import Media from 'components/Media';
 import PostModal from 'components/Modals/PostModal';
 import Overlay from 'components/Overlay';
 import Slider from 'components/Slider';
-import { DB } from 'fb-config';
-import { equalTo, get, orderByChild, query, ref as dbRef } from 'firebase/database';
+import { db } from 'fb-config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import useAuth from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
 import s from 'styles/Post.module.css';
 import { formatPostTime } from 'utils/formatTime';
+import { getComments, getPostContents, getUserByUid } from 'utils/services';
 import ButtonPanel from './ButtonPanel';
 import CommentForm from './CommentForm';
 import Header from './Header';
 
-export default function Post({post}) {
+export default function Post({ post }) {
   const { user:{username, uid} } = useAuth()
+  const [postUser, setPostUser] = useState()
   const [comments, setComments] = useState(0)
   const [timePosted, setTimePosted] = useState('')
   const [userComments, setUserComments] = useState([])
-  const [content, setContent] = useState(<></>)
+  const [content, setContent] = useState([])
   const [commentModal, setCommentModal] = useState(false)
   const updateComments = (comment) => setUserComments(p => [ ...p, comment ])
 
   useEffect(() => {
     setTimePosted(formatPostTime(post.timeStamp))
-
-    if(post.content.length === 1) setContent(
-      <div className={s.pic}>{<Media path={post.content[0]}/>}</div>
-    )
-    else setContent(
-      <Slider isInPost>
-        {post.content.map(i => <div key={i} className={s.pic}><Media path={i}/></div> )}
-      </Slider>
-    )
+    getUserByUid(post.user).then(setPostUser)
+    getPostContents(post.content).then(setContent)
 
     if(post.noComment) return
-    // get number of comments
-    get(dbRef(DB, `comments/${post.id}/count`))
-      .then(d => {if(!!d.val()) setComments(d.val())})
+    // get number of comments'
+    getComments(post.id).then(data => setComments(data.length))
     
     // get current users comments
-    get(query(
-      dbRef(DB, `comments/${post.id}`), 
-      orderByChild('userId'), 
-      equalTo(uid)
-    )).then((d) => {
-        if(!d.val()) return;
+    getDocs(query(
+      collection(db, 'posts', post.id, 'comments'),
+      where('user', '==', uid)
+    )).then(com => {
         setUserComments(
-          Object.values(d.val()).map(i => i.content)
+          com.docs.map(i => i.data().content)
         )
       })
     
@@ -56,18 +47,26 @@ export default function Post({post}) {
   const openModal = () => setCommentModal(true)
   const closeModal = () => setCommentModal(false)
 
+  if(!content.length || !postUser) return null
   return (
     <article className={s.post}>
-      <Header postId={post.id} username={post.username}/>
-      <div className={s.content}>{content}</div>
+      <Header postId={post.id} user={postUser}/>
+
+      <div className={s.content}>
+        <Slider isInPost>
+          {content.map(src => <div key={src} className={s.pic}><img {...{src}} alt=""/></div> )}
+        </Slider>  
+      </div>
 
       <ButtonPanel {...{post, openModal} }/>
 
       {!post.caption.length ||
-        <section className={s.caption}><span>{post.username}</span> {post.caption}</section>}
+        <section className={s.caption}><span>{postUser.username}</span> {post.caption}</section>}
+        
       {(post.noComment || !comments) ||
         <div className={s.viewcomment} onClick={openModal}>View all {comments} comments</div>
       }
+
       {!userComments.length ||
         <div className={s['comments-prev']}>
           {userComments.map((val, i) => {
@@ -75,11 +74,13 @@ export default function Post({post}) {
           })}
         </div>
       }
+
       <div className={s.timestamp}>{timePosted}</div>
       <CommentForm postId={post.id} {...{updateComments}}/>
+
       {commentModal && 
         <Overlay onClick={closeModal}>
-          <PostModal {...{content, post, timePosted}}/>
+          <PostModal {...{content, post, timePosted, user: postUser}}/>
         </Overlay>
       }
       
