@@ -2,7 +2,7 @@ import useAuth from 'hooks/useAuth'
 import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getUserwithProfileUrl } from 'utils/services'
+import { getUserWithProfileUrl } from 'utils/services'
 import AccountLink from '../AccountLink'
 import UnfollowModal from '../Modals/UnfollowModal'
 import style from './style.module.css'
@@ -20,13 +20,13 @@ export default function MiniProfile({ uid, username, name, profileUrl }) {
     })
 
     useEffect(() => {
-        setFollow(follows.some(item => item.user === uid))
         if(isLoggedUser){
-            setAccount({...user})
+            setAccount(user)
             return
         }
+        setFollow(follows.includes(uid))
         if(!username){
-            getUserwithProfileUrl(uid)
+            getUserWithProfileUrl(uid)
             .then(setAccount)
         }
 

@@ -6,19 +6,20 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import style from 'styles/Modal.module.css';
 
-export default function OptionsModal({ postId, closeModal, user }) {
+export default function OptionsModal({ postId, closeModal, username, uid, profileUrl }) {
     const { follows } = useAuth()
     const [isFollowing, setFollowing] = useState(false)
     const isSameLocation = useLocation().pathname === `/p/${postId}`
-    const [unFollowModal, openFollowModal] = useModal(UnfollowModal, {username: user})
+    const [unFollowModal, openFollowModal] = useModal(UnfollowModal, { username, uid, profileUrl })
     const UnFollowbtn = <button onClick={openFollowModal} className={`${style.btn} ${style.warning}`}>Unfollow</button>
     const GoToBtn = <Link to={`/p/${postId}`}>
                         <button className={style.btn}>Go to post</button>
                     </Link>
 
     useEffect(() => {
-        setFollowing(follows.some(follow => follow.user === user))
-    }, [postId, user, follows])
+        setFollowing(follows.includes(uid))
+    }, [postId, uid, username, follows])
+
     function copyLink(){
         const {ClipboardItem} = window
         const type = "text/plain";

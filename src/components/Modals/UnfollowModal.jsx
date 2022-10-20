@@ -7,8 +7,11 @@ export default function UnfollowModal({ uid, username, profileUrl, onUnfollow, c
   const { unFollow } = useAuth()
 
   const unFollowHandler = () => {
-    unFollow(uid);
-    onUnfollow();
+    unFollow(uid)
+    .then(() => {
+      onUnfollow()
+      closeModal()
+    })
   }
 
   if(!username || !uid || !profileUrl ) return null

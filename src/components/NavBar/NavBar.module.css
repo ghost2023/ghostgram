@@ -24,7 +24,57 @@
 .brand a{
     display: flex;
 }
+
+.search-container{
+    border-radius: 8px;
+    height: 36px;
+    min-width: 125px;
+    display: flex;
+    flex: 0 1 auto;
+    width: 268px;
+    position: relative;
+}
+.searchbar{width: 100%;}
+.searchbar input{
+    background: var(--grey-200);
+    border: 0;
+    border-radius: 8px;
+    color: var(--blck-clr);
+    font-size: 16px;
+    height: 100%;
+    padding: 3px 16px;
+    width: 100%;
+    z-index: 2;
+    width: 100%;
+}
+.searchbar input::placeholder{
+    color: var(--grey-clr);
+    font-weight: 300;
+}
+
+.searchbar span{
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+    background: rgb(200, 200, 200);
+}
+
+.searchbar span svg{
+    color: var(--grey-200);
+    fill: var(--grey-200);
+}
+
+
 .panel{
+    padding-left: 24px;
     display: flex;
     flex: 1 0 127px;
     justify-content: flex-end;

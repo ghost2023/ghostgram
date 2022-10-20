@@ -1,55 +1,50 @@
 import NewPost from 'components/NewPostModal/';
 import PostPreview from 'components/PostPreview';
-import { DB } from 'fb-config';
-import { equalTo, get, orderByChild, query, ref } from 'firebase/database';
-import useAuth from 'hooks/useAuth';
+import { db } from 'fb-config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Camera from 'svgs/Camera';
-import s from '../Account.module.css';
+import style from '../Account.module.css';
 
-export default function Posts({ username }) {
+export default function Posts({ uid, isSameUser }) {
     const [posts, setPosts] = useState([])
-    const { user } = useAuth()
     const [newPost, openNewPost] = useState(false)
 
     useEffect(() => {
         setPosts([])
-        get(query(
-            ref(DB, 'posts/'), 
-            orderByChild('username'), 
-            equalTo(username) 
-        )).then(d => {
-            if(!d.val()) return
-            const postsArr = Object.entries(d.val())
-            setPosts(postsArr.map(([id, val]) => {return {
-                ...val, id
+        getDocs(query(
+            collection(db, 'posts'),
+            where("user", "==", uid)
+        )) 
+        .then(d => {
+            setPosts(d.docs.map(doc => {return {
+                ...doc.data(), id: doc.id
             }}))
         })
-    },[username])
+    },[uid])
 
 
   if(!posts.length)return (
-    <article className={s.postsection}>
-        <div className={s.noposts}>
-            <div className={s.cameraicon}>
+    <article className={style.postsection}>
+        <div className={style.noposts}>
+            <div className={style.cameraicon}>
                 <Camera/>
             </div>
-            {username !== user?.username? 
+            {!isSameUser? 
                 <h1>No Posts Yet</h1>:
                 <>
-                    <h1 className={s.self}>Share Photos</h1>
+                    <h1 className={style.self}>Share Photos</h1>
                     <p>When you share photos, they will appear on your profile.</p>
                     <button onClick={() => openNewPost(true)}>Share your first photo</button>
                 </>
             }
         </div>
-        {newPost ? <NewPost closeNewPost={() => openNewPost(false)} />:<></>}
+        {newPost ? <NewPost closeNewPost={() => openNewPost(false)} /> : null}
     </article>
   )
   return(
-    <article className={s.postsection}>
-        {posts.map(post => <PostPreview {...{post}} key={post.id}/>
-        )}
+    <article className={style.postsection}>
+        {posts.map(post => <PostPreview {...{post}} key={post.id}/>)}
     </article>
   )
 }

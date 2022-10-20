@@ -17,6 +17,7 @@ export default function NavBar({ page }) {
   const [isFDOpen, setFDOpen] = useState(false)
   const [isDBOpen, setDBOpen] = useState(false)
 
+
   return (
     <div className={style.navbar}>
       <div className={style.container}>
@@ -25,12 +26,10 @@ export default function NavBar({ page }) {
             <img src={img} alt="" />
           </Link>
         </div>
-        <div className={style.search}>
-          <Search />
-        </div>
+        <Search />
         <div className={style.panel}>
           <Link to='/' className={style['panel-btn']}>
-            <House full={page === 'home' && !newPostModal && !isFDOpen  } />
+            <House full={page === 'home' && !newPostModal && !isFDOpen && !isDBOpen } />
           </Link>
           <Link to='/direct/inbox' className={style['panel-btn']}>
             <Kite full={page === 'inbox'} />

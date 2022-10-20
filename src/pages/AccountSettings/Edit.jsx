@@ -1,6 +1,7 @@
-import { auth, DB } from 'fb-config'
+import { auth, db, realDb } from 'fb-config'
 import { updateEmail } from 'firebase/auth'
-import { ref, remove, set, update } from 'firebase/database'
+import { ref, update } from 'firebase/database'
+import { doc, updateDoc } from 'firebase/firestore'
 import useAuth from 'hooks/useAuth'
 import useModal from 'hooks/useModal'
 import { useState } from 'react'
@@ -43,12 +44,10 @@ export default function Edit() {
 
   const formChange = e => {
     const form = e.target.closest("form")
-    // const 
   }
  
   const formSubmit = async (e) => {
     e.preventDefault()
-    console.log(e.target)
     const form = e.target
     const name = form.name.value
     const bio = form.bio.value
@@ -57,36 +56,18 @@ export default function Edit() {
       await updateEmail(auth.currentUser, email)
     }
 
-    if(username !== user.username){
-      const newUserObj = {
-        bio,
-        name, 
-        email,
-        uid: user.uid,
-        occupation: user.occupation,
-        isVerified: user.isVerified,
-        followings: user.followings,
-        posts: user.posts,
-        profile: user.profile,
-      }
-
-      await set(ref(DB, 'users/' + username), newUserObj)
-      await remove(ref(DB, 'users/' + user.username))
-      return
-    }
-  console.log(bio)
     const newUserObj = {
       name,
-      bio,
-      email,
+      username,
     }
+    await Promise.all([
+      update(ref(realDb, 'users/' + user.uid), newUserObj),
+      updateDoc(doc(db, 'users', user.uid), {...newUserObj, bio})
+    ])
     setUser(prev => {
       return {...prev, newUserObj}
     })
-    await update(ref(DB, 'users/' + username), newUserObj)
-    return
   }
-
 
   return (
     <main>

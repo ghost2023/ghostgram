@@ -5,7 +5,7 @@ function Home() {
 
   return (
     <>
-      <NavBar page="Home"/>    
+      <NavBar page="home"/>    
       <Timeline />
     </>
   )

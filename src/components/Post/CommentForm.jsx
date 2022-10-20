@@ -6,11 +6,11 @@ import { commentPost } from 'utils/services';
 
 export default function CommentForm({ postId ,updateComments }) {
     const [comment, setComment] = useState('')
-    const { user } = useAuth()
+    const { user: { uid } } = useAuth()
 
     function submitComment(e){
       e.preventDefault();
-      commentPost(postId, user, comment)
+      commentPost(postId, uid, comment)
         .then(() => {
           e.target.querySelector('textarea').value = ''
           setComment('')

@@ -10,11 +10,7 @@ export default function FollowingModal({ uid, closeModal }) {
 
   useEffect(() => {
     getFollowing(uid)
-    .then(users => {
-      if(!users.length) return
-      const followingArr = Object.values(users).map(item => item.user)
-      setFollowing(followingArr)
-    })
+    .then(setFollowing)
   }, [uid])
 
   return (
