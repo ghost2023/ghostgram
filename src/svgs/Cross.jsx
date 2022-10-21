@@ -1,7 +1,7 @@
 export default function Cross({ small, xsmall }) { 
-    let size = "48";
-    if(small) size = "18"
-    if(xsmall) size = "8"
+    let size = "24px";
+    if(small) size = "18px"
+    if(xsmall) size = "8px"
     
     return (
         <svg viewBox="0 0 24 24" width={size} height={size} >
