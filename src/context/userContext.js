@@ -1,7 +1,7 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { createContext, useEffect, useState } from "react";
-import { getFollowing, getUserByUid, getUserProfile } from 'utils/services';
+import { getFollowing, getUserFullData, getUserProfile } from 'utils/services';
 import { auth, db } from '../fb-config';
 
 export const userContext = createContext()
@@ -26,6 +26,7 @@ export default function UserAuthProvider({ children }) {
     if(follows.includes(uid)) return
     
     const followings = user.followings + 1
+    console.log(followings)
     Promise.all([
       setDoc(doc(db, 'users', user.uid, 'follows', uid), {}),
       updateDoc(doc(db, 'users', user.uid), {followings})
@@ -63,12 +64,12 @@ export default function UserAuthProvider({ children }) {
         setLoading(false)
         return console.log('no user')
       }
-      const userData = await getUserByUid(currentuser.uid)
+      const userData = await getUserFullData(currentuser.uid)
 
-      const userObj = {
+      setUser({
         ...currentuser,
         ...userData
-      }
+      })
       console.log("Auth", userData.username);
       
       const promiseArr = await Promise.all([
@@ -76,7 +77,6 @@ export default function UserAuthProvider({ children }) {
         updateProfile(userData.profile)
       ])
       
-      setUser(userObj)
       setFollows(promiseArr[0])
       setLoading(false)
     }, error => {
