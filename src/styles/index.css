@@ -47,3 +47,11 @@ button:disabled{opacity: 0.3;}
     justify-content: center;
     z-index: 100;
 }
+.spinner{
+    animation: spinner 1.2s steps(12) infinite;
+}
+
+@keyframes spinner {
+    0%{transform:rotate(180deg)}
+    100%{transform:rotate(540deg)}
+}
