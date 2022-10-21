@@ -1,4 +1,5 @@
 import AccountLink from 'components/AccountLink';
+import useAuth from 'hooks/useAuth';
 import useModal from 'hooks/useModal';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { getUserProfile } from 'utils/services';
 import OptionsModal from './OptionsModal';
 
 export default function Header({ postId, user:{ uid, username, profile } }) {
+  const { follows, follow } = useAuth()
   const [profileUrl, setUserProfile] = useState("")
   const [optionModal, openOptionModal] = useModal(OptionsModal, {...{postId}, uid, username, profileUrl} )
 
@@ -19,11 +21,17 @@ export default function Header({ postId, user:{ uid, username, profile } }) {
     <div className={style.header}>
       <Link to={`/${username}`}>
         <div className={style.userpic}>
-            <img src={profileUrl} alt=""/>
+          <img src={profileUrl} alt=""/>
         </div>
       </Link>
       <div className={style.username}>
-          <AccountLink username={username} />
+        <AccountLink username={username} />
+        {follows.includes(uid) ||
+        <div className={style.followbtn}>
+          <span>•</span>
+          <button onClick={() => follow(uid)}>Follow</button>
+        </div>
+        }
       </div>
       <button className={style.options} onClick={openOptionModal}>
         <Options isSmall/>
