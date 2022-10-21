@@ -49,6 +49,17 @@
     fill: #fff;
     color: #fff;
 }
+.header .loading{
+    margin-right: 8px;
+}
+
+.loading{
+    padding: 8px;
+}
+.loading svg{
+    height: 24px;
+    width: 24px;
+}
 
 .body{
     display: flex;

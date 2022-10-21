@@ -6,6 +6,7 @@ import useAuth from 'hooks/useAuth';
 import { useState } from 'react';
 import Arrow from 'svgs/Arrow';
 import Chevron from 'svgs/Chevron';
+import Spinner from 'svgs/Spinner';
 import style from './style.module.css';
 
 export default function FinalPage({ prevStep, closeModal, imgUrls }) {
@@ -15,8 +16,10 @@ export default function FinalPage({ prevStep, closeModal, imgUrls }) {
     const [setting, setSetting] = useState(false)
     const [hideStats, setHideStats] = useState(false)
     const [noComment, setNoComment] = useState(false)
+    const [isLoading, setLoading] = useState(true)
 
     const submitPost = async () => {
+        setLoading(true)
         const promiseArr = []
         const names = []
         for(const url of imgUrls){
@@ -41,6 +44,7 @@ export default function FinalPage({ prevStep, closeModal, imgUrls }) {
             })
         )
         await Promise.all(promiseArr)
+        setLoading(false)
         console.log('success')
         closeModal()
     }
@@ -50,7 +54,10 @@ export default function FinalPage({ prevStep, closeModal, imgUrls }) {
         <div className={style.header}>
             <button onClick={prevStep}><Arrow/></button>
             <h1>Create new post</h1>
-            <button onClick={submitPost}>Share</button>
+            {isLoading?
+                <div className={style.loading}><Spinner/></div>:
+                <button onClick={submitPost}>Share</button>
+            }
         </div>
         <div className={`${style.body} ${style.final}`}>
             <div className={style.preview}>
