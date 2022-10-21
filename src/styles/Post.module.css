@@ -186,11 +186,30 @@
 .comment .userpic{
     margin-right: 18px;
 }
+
+.commentbody{
+    display: flex;
+    flex-direction: column;
+    
+}
 .comment span{
     font-weight: 600;
     padding-right: 4px;
 }
+
+.comment-content p{
+    display: inline;
+}
 .comment span a{color: var(--blck-clr);}
+.commenttime{
+    color: var(--grey-clr);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    margin: 4px 12px 4px 0;
+}
+
+
 .commentform form{
     align-items: center;
     display: flex;

@@ -4,6 +4,7 @@ import Media from 'components/Media';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import style from 'styles/Post.module.css';
+import { formatCommentTime } from 'utils/formatTime';
 import { getUserByUid } from 'utils/services';
 
 export default function Comment({ comment }) {
@@ -23,11 +24,16 @@ export default function Comment({ comment }) {
           <Media path={`profiles/${user.profile}`}/>
         </Link>
       </div>
-      <div className={style["comment-content"]}>
-        <span>
-          <AccountLink username={user.username}/> 
-        </span>
-          {comment.content}
+      <div className={style.commentbody}>
+        <div className={style["comment-content"]}>
+          <span>
+            <AccountLink username={user.username}/> 
+          </span>
+          <p>{comment.content}</p>
+        </div>
+        <time className={style.commenttime}>
+          {formatCommentTime(comment.timeStamp)}
+        </time>
       </div>
     </div>
   )
