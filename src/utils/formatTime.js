@@ -32,9 +32,9 @@ export function formatPostTime(intTime){
 }
 
 export function formatCommentTime(intTime){
-    const currentTime = Date().now
+    const currentTime = Date.now()
     
-    const diff = parseInt((currentTime - intTime) / 1000)
+    const diff = Math.round((currentTime - intTime) / 1000)
 
     if(diff > 561_600){
         const weekSince = Math.round(diff / 604_800)
