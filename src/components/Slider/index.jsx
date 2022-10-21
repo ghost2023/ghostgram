@@ -28,10 +28,13 @@ export default function Slider({ children, isInPost }) {
       </div>
       {page === 0 || <div onClick={goLeft} className={`${style.left} ${style.btn}`}><CircleChevron/></div>}
       {page === len - 1 || <div onClick={goRight} className={`${style.right} ${style.btn}`}><CircleChevron/></div>}
-      <div className={style.indicators + (isInPost ? ` ${style.bottom}` : '')}>
-        {[...Array(len)].map((_, i) =>
-          <div key={i}  className={style.indicator + (i === page ? ` ${style.current}` : '')}/>
-        )}</div>
+      {children.length === 1 ||
+        <div className={style.indicators + (isInPost ? ` ${style.bottom}` : '')}>
+          {[...Array(len)].map((_, i) =>
+            <div key={i}  className={style.indicator + (i === page ? ` ${style.current}` : '')}/>
+          )}
+        </div>
+      }
     </div>
   )
 }
