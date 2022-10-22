@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { createContext, useEffect, useState } from "react";
 import { getFollowing, getUserFullData, getUserProfile } from 'utils/services';
 import { auth, db } from '../fb-config';
@@ -9,6 +9,7 @@ export const userContext = createContext()
 export default function UserAuthProvider({ children }) {
   const [user, setUser] = useState();
   const [follows, setFollows] = useState([]);
+  const [favorites, setFavorites] = useState([])
   const [isLoading, setLoading] = useState(true);
   const [profileUrl, setProfileUrl] = useState('')
   const value = {
@@ -16,10 +17,13 @@ export default function UserAuthProvider({ children }) {
     profileUrl,
     isLoading,
     follows,
+    favorites,
     follow,
     unFollow,
     setUser,
-    updateProfile
+    updateProfile,
+    addToFav,
+    removeFav
   }
 
   async function follow(uid){
@@ -51,6 +55,18 @@ export default function UserAuthProvider({ children }) {
     })
   }
 
+  async function addToFav(postId){
+    if(favorites.includes(postId)) return
+    await setDoc(doc(db, 'users', user.uid, 'favorites', postId), {})
+    setFavorites(prev => [...prev, postId])
+  }
+
+  async function removeFav(postId){
+    if(!favorites.includes(postId)) return
+    await deleteDoc(doc(db, 'users', user.uid, 'favorites', postId))
+    setFollows(prev => prev.filter(item => item !== postId))
+  }
+
   async function updateProfile(newProfile){
     const url = await getUserProfile(newProfile) 
     setProfileUrl(url)
@@ -64,16 +80,24 @@ export default function UserAuthProvider({ children }) {
         setLoading(false)
         return console.log('no user')
       }
-      const userData = await getUserFullData(currentuser.uid)
+
+      const { uid, username, email } = currentuser
+      const [userData, favs] = await Promise.all([
+        getUserFullData(currentuser.uid),
+        getDocs(collection(db, 'users', uid, "favorites"))
+      ]) 
+
+      setFavorites(favs.docs.map(item => item.id))
 
       setUser({
-        ...currentuser,
+        uid, 
+        email,
         ...userData
       })
-      console.log("Auth", userData.username);
+      console.log("Auth", username);
       
       const promiseArr = await Promise.all([
-        getFollowing(currentuser.uid), 
+        getFollowing(uid), 
         updateProfile(userData.profile)
       ])
       

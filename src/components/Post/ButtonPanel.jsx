@@ -13,14 +13,16 @@ import { disLikePost, getLikes, getUserByUid, likePost } from 'utils/services'
 import LikesModal from './LikesModal'
 
 export default function ButtonPanel({ post, openModal }) {
-    const { user, follows } = useAuth()
+    const { user, follows, favorites, addToFav, removeFav } = useAuth()
     const [peopleLikes, setPeopleLikes] = useState()
     const [likes, setLikes] = useState(0)
     const [isLiked, setLiked] = useState(false)
+    const [isFav, setFav] = useState(false)
     const [LikeView, setLikeView] = useState(<></>)
     const [likeModal, openLikeModal] = useModal(LikesModal, {postId: post.id})
 
     useEffect(() => {
+      setFav(favorites.includes(post.id));
       (async() => {
         let likeCount = 0
         getLikes(post.id).then(item => {
@@ -39,9 +41,9 @@ export default function ButtonPanel({ post, openModal }) {
           if(!docs.length) return
           const u = await getUserByUid(docs[0].id)
           setPeopleLikes(u.username)
-        })
+        }) 
       })()
-    }, [post, follows])
+    }, [post, follows, favorites, user])
 
     useEffect(() => {
       if(likes === 0){
@@ -81,25 +83,45 @@ export default function ButtonPanel({ post, openModal }) {
     }, [likes, peopleLikes, isLiked])
 
     function likeUnLike(){
-        if(isLiked){
-          disLikePost(post.id, user.uid).then(() => {
-            setLiked(false)
-            setLikes(p => p - 1)
-          })
-          return
-        }
-        likePost(post.id, user.uid).then(() => {
-          setLiked(true)
-          setLikes(p => p + 1)
+      if(isLiked){
+        disLikePost(post.id, user.uid).then(() => {
+          setLiked(false)
+          setLikes(p => p - 1)
         })
+        return
       }
+      likePost(post.id, user.uid).then(() => {
+        setLiked(true)
+        setLikes(p => p + 1)
+      })
+    }
     
+    function favUnFav(){
+      if(isLiked){
+        removeFav(post.id).then(() => {
+          setFav(false)
+        })
+        return
+      }
+      addToFav(post.id).then(() => {
+        setFav(true)
+      })
+    }
+
   return (<>
     <section className={style.btns}>
-      <button className={style.likebtn + (isLiked ? ` ${style.liked}`:'')} onClick={likeUnLike}><Heart full={isLiked}/></button>
-      <button className={style.commentbtn} onClick={openModal}><Bubble/></button>
-      <button className={style.sharebtn}><Kite/></button>
-      <button className={style.markbtn}><Mark/></button>
+      <button className={style.likebtn + (isLiked ? ` ${style.liked}`:'')} onClick={likeUnLike}>
+        <Heart full={isLiked}/>
+      </button>
+      <button className={style.commentbtn} onClick={openModal}>
+        <Bubble/>
+      </button>
+      <button className={style.sharebtn}>
+        <Kite/>
+      </button>
+      <button className={style.markbtn} onClick={favUnFav}>
+        <Mark full={isFav}/>
+      </button>
     </section>
     {!likes || <div className={style.likecount} onClick={openLikeModal}>{LikeView}</div>}
     {likeModal}
