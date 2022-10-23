@@ -32,9 +32,50 @@
     display: flex;
     flex: 0 1 auto;
     width: 268px;
-    position: relative;
 }
-.searchbar{width: 100%;}
+
+@media screen and (max-width:640px) {
+    .search-container{display: none;}
+    .panel{margin: 0;}
+}
+
+.searchcover{
+    border-radius: 8px;
+    height: 100%;
+    width: 100%;
+    background: var(--grey-200);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    color: var(--grey-clr);
+    cursor: context-menu;
+}
+.searchcover svg{
+    fill: var(--grey-clr);
+    color: var(--grey-clr);
+    margin-right: 12px;
+}
+.searchcover span{
+    font-size: 16px;
+    line-height: 25px;
+    font-weight: 300;
+}
+
+.searchhider{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.searchbar-container{
+    position: relative;
+    width: 100%;
+    z-index: 100;
+}
+
+.searchbar{width: 100%;height: 100%;}
 .searchbar input{
     background: var(--grey-200);
     border: 0;
@@ -42,10 +83,11 @@
     color: var(--blck-clr);
     font-size: 16px;
     height: 100%;
+    width: 100%;
     padding: 3px 16px;
     width: 100%;
     z-index: 2;
-    width: 100%;
+    position: relative;
 }
 .searchbar input::placeholder{
     color: var(--grey-clr);
@@ -65,6 +107,7 @@
     height: 14px;
     width: 14px;
     background: rgb(200, 200, 200);
+    z-index: 3;
 }
 
 .searchbar span svg{
@@ -72,6 +115,59 @@
     fill: var(--grey-200);
 }
 
+.suggestions-container{
+    width: 375px;
+    height: 362px;
+    position: absolute;
+    top: 48px;
+    background: #fff;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, .0975));
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.suggestionsbox{
+    overflow-y: auto;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.suggestion-header{
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 16px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+.suggestion-header h3{
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+}
+.suggestion-header button{
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--lg-blue);
+    font-size: 14px;
+    font-weight: 600;
+}
+.suggestion-body{
+    flex-grow: 1;
+}
+.suggestion-empty{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.suggestion-empty p{
+    font-weight: 600;
+    color: var(--grey-clr);
+    line-height: 18px;
+}
 
 .panel{
     padding-left: 24px;
@@ -107,14 +203,16 @@
     border-radius: 50px;
 }
 .dropdown{
-    top: 40px;
-    left: -186px;
+    top: 42px;
+    left: -180px;
     position: absolute;
     background: #fff;
     border-radius: 6px;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .0975);
-    display: none;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, .0975));
     z-index: 500;
+}
+.dropdown .arrow{
+    left: 184px;
 }
 .account .dropdown{
     width: 230px;
@@ -125,23 +223,23 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 490;
+    z-index: 40;
     display: none;
 }
-.hider.open{display: block;}
-.foc .icon{
+.hider[open]{display: block;}
+.icon[open]{
     box-shadow: 0 0 0 1px white ,0 0 0 2px black
 }
-.foc .dropdown{display:block}
 .dropdown a{
     color: var(--blck-clr);
     text-decoration: none;
 }
 .tab{
     display: flex;
+    align-items: center;
     padding: 8px 16px;
 }
-.dropdown a:first-child .tab{
+.dropdown a:first-of-type .tab{
     padding-top: 12px;
 }
 
@@ -164,4 +262,18 @@
 }
 .tab:hover, .logout:hover{
     background-color: var(--grey-100);
+}
+
+.arrow{
+    background: #fff;
+    border: 1px solid #fff;
+    position: absolute;
+    clip-path: path( 'M8 0C8 4 9.32406e-08 7.819 1.25211e-07 10.5C1.57188e-07 13.1815 8 17.0005 8 21L8 0Z' );
+    height: 20px;
+    width: 15px;
+    transform: rotate(90deg);
+    bottom: -10px;
+    top: -10px;
+    left: 50%;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .0975);
 }
