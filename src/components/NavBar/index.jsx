@@ -44,7 +44,7 @@ export default function NavBar({ page }) {
           <AccountBtn isDBOpen={isDBOpen} openDB={() => setDBOpen(true)} />
         </div>
       </div>
-      <div className={style.hider + (isDBOpen || isFDOpen ? ` ${style.open}` : '')} onClick={() => { setFDOpen(false); setDBOpen(false) }}></div>
+      <div className={style.hider}  open={isDBOpen || isFDOpen} onClick={() => { setFDOpen(false); setDBOpen(false) }}></div>
       {newPostModal}
     </div>
   )
