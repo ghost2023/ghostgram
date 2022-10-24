@@ -32,7 +32,7 @@ export default function UserAuthProvider({ children }) {
     const followings = user.followings + 1
     console.log(followings)
     Promise.all([
-      setDoc(doc(db, 'users', user.uid, 'follows', uid), {}),
+      setDoc(doc(db, 'users', user.uid, 'follows', uid), {timeStamp: Date.now()}),
       updateDoc(doc(db, 'users', user.uid), {followings})
     ])
     setFollows(prev => [...prev, uid])
@@ -57,7 +57,7 @@ export default function UserAuthProvider({ children }) {
 
   async function addToFav(postId){
     if(favorites.includes(postId)) return
-    await setDoc(doc(db, 'users', user.uid, 'favorites', postId), {})
+    await setDoc(doc(db, 'users', user.uid, 'favorites', postId), {timeStamp: Date.now()})
     setFavorites(prev => [...prev, postId])
   }
 

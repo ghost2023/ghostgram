@@ -94,7 +94,7 @@ export async function getLikes(postId){
 }
 
 export async function likePost(postId, uid){
-    await setDoc(doc(db, 'posts', postId, 'likes', uid),{})
+    await setDoc(doc(db, 'posts', postId, 'likes', uid),{timeStamp: Date.now()})
 }
 
 export async function disLikePost(postId, uid){
